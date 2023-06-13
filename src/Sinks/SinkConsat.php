@@ -2,9 +2,9 @@
 
 namespace TromsFylkestrafikk\RagnarokConsat\Sinks;
 
-use TromsFylkestrafikk\RagnarokSink\Sinks\Sink;
+use TromsFylkestrafikk\RagnarokSink\Sinks\SinkBase;
 
-class SinkConsat extends Sink
+class SinkConsat extends SinkBase
 {
     public $name = "Consat";
 }
