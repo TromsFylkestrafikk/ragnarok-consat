@@ -14,13 +14,20 @@ class RagnarokConsatServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/ragnarok.php', 'ragnarok');
-
         $this->publishConfig();
 
-        // $this->loadViewsFrom(__DIR__.'/resources/views', 'ragnarok_consat');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         // $this->registerRoutes();
+    }
+
+    /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register(): void
+    {
+        $this->mergeConfigFrom(__DIR__ . '/../config/ragnarok_consat.php', 'ragnarok');
     }
 
     /**
@@ -28,7 +35,7 @@ class RagnarokConsatServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    private function registerRoutes()
+    private function registerRoutes(): void
     {
         Route::group($this->routeConfiguration(), function () {
             $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
@@ -40,23 +47,13 @@ class RagnarokConsatServiceProvider extends ServiceProvider
     *
     * @return array
     */
-    private function routeConfiguration()
+    private function routeConfiguration(): array
     {
         return [
             'namespace'  => "TromsFylkestrafikk\RagnarokConsat\Http\Controllers",
             'middleware' => 'api',
             'prefix'     => 'api'
         ];
-    }
-
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        //
     }
 
     /**
