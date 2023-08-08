@@ -4,12 +4,23 @@ namespace TromsFylkestrafikk\RagnarokConsat\Sinks;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use TromsFylkestrafikk\RagnarokConsat\Services\ConsatHistoric;
 use TromsFylkestrafikk\RagnarokSink\Sinks\SinkBase;
 
 class SinkConsat extends SinkBase
 {
     public $id = "consat";
     public $title = "Consat";
+
+    /**
+     * @var ConsatHistoric
+     */
+    protected $consat = null;
+
+    public function __construct()
+    {
+        $this->consat = app(ConsatHistoric::class);
+    }
 
     /**
      * @inheritdoc
@@ -30,8 +41,11 @@ class SinkConsat extends SinkBase
     /**
      * @inheritdoc
      */
-    public function fetch(): bool
+    public function fetch($ids = []): bool
     {
+        foreach ($ids as $date) {
+            $this->consat->remoteFile->getFile($this->consat->filenameFromDate($date));
+        }
         return true;
     }
 

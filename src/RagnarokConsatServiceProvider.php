@@ -4,6 +4,7 @@ namespace TromsFylkestrafikk\RagnarokConsat;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use TromsFylkestrafikk\RagnarokConsat\Services\ConsatHistoric;
 
 class RagnarokConsatServiceProvider extends ServiceProvider
 {
@@ -15,7 +16,6 @@ class RagnarokConsatServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishConfig();
-
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         // $this->registerRoutes();
     }
@@ -27,7 +27,10 @@ class RagnarokConsatServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/ragnarok_consat.php', 'ragnarok');
+        $this->mergeConfigFrom(__DIR__ . '/../config/ragnarok_consat.php', 'ragnarok_consat');
+        $this->app->singleton(ConsatHistoric::class, function () {
+            return new ConsatHistoric();
+        });
     }
 
     /**
@@ -66,7 +69,7 @@ class RagnarokConsatServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__ . '/../config/ragnarok_consat.php' => config_path('ragnarok_consat.php'),
-            ], 'config');
+            ], ['config', 'ragnarok_consat', 'ragnarok_consat.config']);
         }
     }
 }

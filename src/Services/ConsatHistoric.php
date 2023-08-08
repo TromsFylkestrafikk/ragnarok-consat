@@ -25,7 +25,7 @@ class ConsatHistoric
     /**
      * @var RemoteFile
      */
-    protected $remoteFile = null;
+    public $remoteFile = null;
 
     protected $dataModels = [
         Call::class,
