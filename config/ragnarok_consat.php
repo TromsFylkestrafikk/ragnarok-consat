@@ -12,8 +12,10 @@ return [
         'host' =>  env('CONSAT_HOST'),
         'username' => env('CONSAT_USERNAME'),
         'password' => env('CONSAT_PASSWORD'),
-        'port' => (int) env('CONSAT_PORT'),
-        'timeout' => 30,
+        'port' => (int) env('CONSAT_PORT', 22),
         'root' => env('CONSAT_ROOT', '/'),
+        'timeout' => 30,
+        'visibility' => 'public',
+        'directory_visibility' => 'public',
     ],
 ];
