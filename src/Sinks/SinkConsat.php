@@ -2,6 +2,7 @@
 
 namespace TromsFylkestrafikk\RagnarokConsat\Sinks;
 
+use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use TromsFylkestrafikk\RagnarokConsat\Services\ConsatHistoric;
@@ -41,12 +42,14 @@ class SinkConsat extends SinkBase
     /**
      * @inheritdoc
      */
-    public function fetch($ids = []): bool
+    public function fetch($id): bool
     {
-        foreach ($ids as $date) {
-            $this->consat->remoteFile->getFile($this->consat->filenameFromDate($date));
+        try {
+            $file = $this->consat->remoteFile->getFile($this->consat->filenameFromDate($id));
+        } catch (Exception $except) {
+            return false;
         }
-        return true;
+        return $file ? true : false;
     }
 
     /**
