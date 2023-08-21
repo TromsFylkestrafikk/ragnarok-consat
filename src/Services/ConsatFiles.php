@@ -29,15 +29,6 @@ class ConsatFiles
 
     protected $remoteDisk = null;
 
-    protected $dataModels = [
-        Call::class,
-        CallDetail::class,
-        Destination::class,
-        PassengerCount::class,
-        PlannedJourney::class,
-        Stop::class,
-    ];
-
     /**
      * Timestamp of last re-connect to remote disk
      *
@@ -49,24 +40,7 @@ class ConsatFiles
     {
         $this->logPrintfInit('[ConsatService]: ');
         $this->remoteDisk = $this->buildRemoteDisk();
-        $this->remoteFile = new RemoteFiles('Consat', $this->remoteDisk);
-    }
-
-    /**
-     * Remove ancient or superfluous data.
-     *
-     * @return $this
-     */
-    public function cleanupAncient($months = 3): ConsatFiles
-    {
-        $this->info("BEGIN cleanup of ancient data ...");
-        // Stub.
-        //
-        // Call details consumes 88% of all data from consat. Consider this
-        // fresh-ware and remove stuff older than three months.
-        CallDetail::whereDate('date', '<', (new Carbon())->subMonths($months))->delete();
-        $this->info("END cleanup of ancient data");
-        return $this;
+        $this->remoteFile = new RemoteFiles('consat', $this->remoteDisk);
     }
 
     /**
