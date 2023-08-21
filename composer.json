@@ -17,6 +17,7 @@
         "illuminate/console": "^10.0",
         "illuminate/database": "^10.0",
         "illuminate/support": "^10.0",
+        "league/flysystem-sftp-v3": "^3.15",
         "tromsfylkestrafikk/ragnarok-sink": "dev-main"
     },
     "require-dev": {
@@ -43,8 +44,8 @@
     },
     "repositories": [
         {
-            "type": "path",
-            "url": "../ragnarok-sink"
+            "type": "github",
+            "url": "https://github.com/TromsFylkestrafikk/ragnarok-sink"
         }
     ],
     "extra": {
