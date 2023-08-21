@@ -10,7 +10,7 @@ use TromsFylkestrafikk\RagnarokConsat\Models\PassengerCount;
 use TromsFylkestrafikk\RagnarokConsat\Models\PlannedJourney;
 use TromsFylkestrafikk\RagnarokConsat\Models\Stop;
 use TromsFylkestrafikk\RagnarokSink\Traits\LogPrintf;
-use TromsFylkestrafikk\RagnarokSink\Services\RemoteFile;
+use TromsFylkestrafikk\RagnarokSink\Services\RemoteFiles;
 use Illuminate\Support\Carbon;
 
 /**
@@ -23,9 +23,11 @@ class ConsatHistoric
     public const DATE_REGEX = "/^(?P<date>20\d{2}-\d{2}-\d{2})\.(?P<ext>7z|zip)$/";
 
     /**
-     * @var RemoteFile
+     * @var RemoteFiles
      */
     public $remoteFile = null;
+
+    protected $remoteDisk = null;
 
     protected $dataModels = [
         Call::class,
@@ -46,20 +48,8 @@ class ConsatHistoric
     public function __construct()
     {
         $this->logPrintfInit('[ConsatService]: ');
-        $this->remoteFile = new RemoteFile('Consat', $this->buildRemoteDisk());
-    }
-
-    /**
-     * Purge all historic data for a given day
-     *
-     * @param string $date
-     */
-    public function purgeDay($date): void
-    {
-        foreach ($this->dataModels as $modelName) {
-            $modelName::where('date', $date)->delete();
-        }
-        $this->remoteFile->resetImportStatus($this->filenameFromDate($date));
+        $this->remoteDisk = $this->buildRemoteDisk();
+        $this->remoteFile = new RemoteFiles('Consat', $this->remoteDisk);
     }
 
     /**
@@ -77,26 +67,6 @@ class ConsatHistoric
         CallDetail::whereDate('date', '<', (new Carbon())->subMonths($months))->delete();
         $this->info("END cleanup of ancient data");
         return $this;
-    }
-
-    /**
-     * List remote files.
-     *
-     * @return array
-     */
-    public function listRemote(): array
-    {
-        return $this->fileFilter($this->remoteFile->getRemoteDisk()->allFiles());
-    }
-
-    /**
-     * List local list of files.
-     *
-     * @return array
-     */
-    public function listLocal(): array
-    {
-        return $this->fileFilter($this->remoteFile->getLocalDisk()->allFiles());
     }
 
     /**
@@ -127,22 +97,5 @@ class ConsatHistoric
     protected function buildRemoteDisk(): Filesystem
     {
         return app('filesystem')->build(config('ragnarok_consat.remote_disk'));
-    }
-
-    /**
-     * @return $this
-     */
-    protected function reConnect(): ConsatHistoric
-    {
-        $this->remoteFile->setRemoteDisk($this->buildRemoteDisk());
-        $this->lastConnect = new Carbon();
-        return $this;
-    }
-
-    protected function fileFilter($filenames): array
-    {
-        return array_filter($filenames, function ($filename) {
-            return preg_match(self::DATE_REGEX, $filename);
-        });
     }
 }

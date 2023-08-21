@@ -8,17 +8,6 @@ class RagnarokConsatTables extends Migration
 {
     public function up(): void
     {
-        Schema::create('consat_files', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name', 30);
-            $table->string('checksum', 40);
-            $table->date('date');
-            $table->enum('import_status', ['new', 'updated', 'importing', 'imported', 'empty', 'notice', 'failed'])->default('new')->comment("Current import status of file.");
-            $table->text('import_msg')->nullable()->comment("Message from last import, if any");
-            $table->timestamps();
-            $table->index(['date']);
-        });
-
         Schema::create('consat_planned_journeys', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
             $table->date('date');
@@ -106,7 +95,6 @@ class RagnarokConsatTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('consat_files');
         Schema::dropIfExists('consat_calls');
         Schema::dropIfExists('consat_call_details');
         Schema::dropIfExists('consat_planned_journeys');
