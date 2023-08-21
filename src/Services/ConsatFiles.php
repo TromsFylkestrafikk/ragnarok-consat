@@ -14,9 +14,9 @@ use TromsFylkestrafikk\RagnarokSink\Services\RemoteFiles;
 use Illuminate\Support\Carbon;
 
 /**
- * Services around historic route and real time data from Consat.
+ * Handle historic data files from Consat
  */
-class ConsatHistoric
+class ConsatFiles
 {
     use LogPrintf;
 
@@ -57,7 +57,7 @@ class ConsatHistoric
      *
      * @return $this
      */
-    public function cleanupAncient($months = 3): ConsatHistoric
+    public function cleanupAncient($months = 3): ConsatFiles
     {
         $this->info("BEGIN cleanup of ancient data ...");
         // Stub.
@@ -87,7 +87,7 @@ class ConsatHistoric
     public function getDateFromFilename($filename)
     {
         $matches = [];
-        $hit = preg_match(ConsatHistoric::DATE_REGEX, $filename, $matches);
+        $hit = preg_match(ConsatFiles::DATE_REGEX, $filename, $matches);
         if (!$hit) {
             return null;
         }

@@ -5,7 +5,7 @@ namespace TromsFylkestrafikk\RagnarokConsat\Sinks;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
-use TromsFylkestrafikk\RagnarokConsat\Services\ConsatHistoric;
+use TromsFylkestrafikk\RagnarokConsat\Services\ConsatFiles;
 use TromsFylkestrafikk\RagnarokSink\Sinks\SinkBase;
 
 class SinkConsat extends SinkBase
@@ -14,13 +14,13 @@ class SinkConsat extends SinkBase
     public $title = "Consat";
 
     /**
-     * @var ConsatHistoric
+     * @var ConsatFiles
      */
     protected $consat = null;
 
     public function __construct()
     {
-        $this->consat = app(ConsatHistoric::class);
+        $this->consat = app(ConsatFiles::class);
     }
 
     /**
