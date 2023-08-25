@@ -1,4 +1,4 @@
 ## Unreleased
 
 ### Added
-- Implemented sink API for fetching raw data.
+- Implemented sink API for fetching and deleting raw data

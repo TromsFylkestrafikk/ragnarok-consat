@@ -55,6 +55,15 @@ class SinkConsat extends SinkBase
     /**
      * @inheritdoc
      */
+    public function removeChunk($id): bool
+    {
+        $this->consat->localFile->rmFile($this->consat->filenameFromDate($id));
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function import(): bool
     {
         Log::debug('Consat import. Yay!');

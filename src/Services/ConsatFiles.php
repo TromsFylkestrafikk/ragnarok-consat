@@ -11,6 +11,7 @@ use TromsFylkestrafikk\RagnarokConsat\Models\PlannedJourney;
 use TromsFylkestrafikk\RagnarokConsat\Models\Stop;
 use TromsFylkestrafikk\RagnarokSink\Traits\LogPrintf;
 use TromsFylkestrafikk\RagnarokSink\Services\RemoteFiles;
+use TromsFylkestrafikk\RagnarokSink\Services\LocalFiles;
 use Illuminate\Support\Carbon;
 
 /**
@@ -27,6 +28,11 @@ class ConsatFiles
      */
     public $remoteFile = null;
 
+    /**
+     * @var LocalFiles
+     */
+    public $localFile = null;
+
     protected $remoteDisk = null;
 
     /**
@@ -41,6 +47,7 @@ class ConsatFiles
         $this->logPrintfInit('[ConsatService]: ');
         $this->remoteDisk = $this->buildRemoteDisk();
         $this->remoteFile = new RemoteFiles('consat', $this->remoteDisk);
+        $this->localFile = $this->remoteFile->getLocal();
     }
 
     /**
