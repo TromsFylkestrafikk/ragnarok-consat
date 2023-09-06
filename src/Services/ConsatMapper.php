@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace TromsFylkestrafikk\RagnarokConsat\Services;
 
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Carbon;
@@ -17,6 +17,9 @@ class ConsatMapper
      */
     protected $csvDisk;
 
+    /**
+     * @param Filesystem $disk Laravel disk/filesystem the csv files is found
+     */
     public function __construct(Filesystem $disk)
     {
         $this->csvDisk = $disk;
@@ -46,7 +49,7 @@ class ConsatMapper
 
     public function mapPlannedJourneys($csvFile)
     {
-        $mapper = $this->createMapper($csvFile, 'consat_historic_planned_journeys', ['id']);
+        $mapper = $this->createMapper($csvFile, 'consat_planned_journeys', ['id']);
         $mapper->column('OperatingCalendarDay', 'date')->required()->format([static::class, 'dateFormatter']);
         $mapper->column('Id', 'id')->required();
         $mapper->column('ExternalId', 'journey_id')->required();
@@ -59,7 +62,7 @@ class ConsatMapper
 
     public function mapCalls($csvFile)
     {
-        $mapper = $this->createMapper($csvFile, 'consat_historic_calls', ['date', 'id']);
+        $mapper = $this->createMapper($csvFile, 'consat_calls', ['date', 'id']);
         $mapper->column('OperatingCalendarDay', 'date')->required()->format([static::class, 'dateFormatter']);
         $mapper->column('Id', 'id')->required();
         $mapper->column('UsesPlannedJourneyId', 'planned_journey_id')->required();
@@ -79,7 +82,7 @@ class ConsatMapper
 
     public function mapCallDetails($csvFile)
     {
-        $mapper = $this->createMapper($csvFile, 'consat_historic_call_details', ['date', 'id']);
+        $mapper = $this->createMapper($csvFile, 'consat_call_details', ['date', 'id']);
         $mapper->column('TimeStamp', 'timestamp')->required();
         $mapper->column('OperatingCalendarDay', 'date')->required()->format([static::class, 'dateFormatter']);
         $mapper->column('StartsAtCallId', 'call_id')->required();
@@ -92,7 +95,7 @@ class ConsatMapper
 
     public function mapPassengerCount($csvFile)
     {
-        $mapper = $this->createMapper($csvFile, 'consat_historic_passenger_count', ['id']);
+        $mapper = $this->createMapper($csvFile, 'consat_passenger_count', ['id']);
         $mapper->column('Id', 'id')->required();
         $mapper->column('OperatingCalendarDay', 'date')->required()->format([static::class, 'dateFormatter']);
         $mapper->column('TimeStamp', 'timestamp')->required();
@@ -107,10 +110,10 @@ class ConsatMapper
 
     public function mapStopPoint($csvFile)
     {
-        $mapper = $this->createMapper($csvFile, 'consat_historic_stops', ['date', 'id']);
+        $mapper = $this->createMapper($csvFile, 'consat_stops', ['date', 'id']);
         $mapper->column('Id', 'id')->required();
         $mapper->column('OperatingCalendarDay', 'date')->required()->format([static::class, 'dateFormatter']);
-        $mapper->column('ExternalId', 'external_id');
+        $mapper->column('ExternalId', 'external_id')->required();
         $mapper->column('Name', 'name')->required();
         $mapper->column('Latitude', 'latitude');
         $mapper->column('Longitude', 'longitude');
@@ -119,8 +122,9 @@ class ConsatMapper
 
     public function mapDestination($csvFile)
     {
-        $mapper = $this->createMapper($csvFile, 'consat_historic_destinations', ['date', 'id']);
+        $mapper = $this->createMapper($csvFile, 'consat_destinations', ['date', 'id']);
         $mapper->column('Id', 'id')->required();
+        $mapper->column('ExternalId', 'external_id');
         $mapper->column('OperatingCalendarDay', 'date')->required()->format([static::class, 'dateFormatter']);
         $mapper->column('DestinationNameShort', 'destination')->required();
         $mapper->preInsertRecord(function ($csvRec, &$dbRec) {
@@ -131,6 +135,13 @@ class ConsatMapper
         return $mapper;
     }
 
+    /**
+     * @param string $csvFile
+     * @param string $destTable
+     * @param array|null $keyCols
+     *
+     * @return CsvToTable
+     */
     protected function createMapper($csvFile, $destTable, $keyCols = null)
     {
         $mapper = new CsvToTable($this->csvDisk->path($csvFile), $destTable, $keyCols);

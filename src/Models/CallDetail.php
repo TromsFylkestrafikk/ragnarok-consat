@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class CallDetail extends Model
 {
     public $timestamps = false;
-    protected $table = 'consat_historic_call_details';
+    protected $table = 'consat_call_details';
 }

@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class PassengerCount extends Model
 {
     public $timestamps = false;
-    protected $table = 'consat_historic_passenger_count';
+    protected $table = 'consat_passenger_count';
 }

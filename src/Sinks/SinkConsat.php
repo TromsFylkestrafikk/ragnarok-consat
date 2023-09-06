@@ -6,10 +6,14 @@ use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use TromsFylkestrafikk\RagnarokConsat\Services\ConsatFiles;
+use TromsFylkestrafikk\RagnarokConsat\Services\ConsatImporter;
 use TromsFylkestrafikk\RagnarokSink\Sinks\SinkBase;
+use TromsFylkestrafikk\RagnarokSink\Traits\LogPrintf;
 
 class SinkConsat extends SinkBase
 {
+    use LogPrintf;
+
     public $id = "consat";
     public $title = "Consat";
 
@@ -21,6 +25,7 @@ class SinkConsat extends SinkBase
     public function __construct()
     {
         $this->consat = app(ConsatFiles::class);
+        $this->logPrintfInit('[SinkConsat]: ');
     }
 
     /**
@@ -45,7 +50,7 @@ class SinkConsat extends SinkBase
     public function fetch($id): bool
     {
         try {
-            $file = $this->consat->remoteFile->getFile($this->consat->filenameFromDate($id));
+            $file = $this->consat->retrieveFile($id);
         } catch (Exception $except) {
             return false;
         }
@@ -64,9 +69,37 @@ class SinkConsat extends SinkBase
     /**
      * @inheritdoc
      */
-    public function import(): bool
+    public function import($id): bool
     {
-        Log::debug('Consat import. Yay!');
+        $importer = new ConsatImporter();
+        try {
+            $importer->import($id);
+        } catch (Exception $except) {
+            $this->error($this->exceptionToStr($except));
+            return false;
+        }
         return true;
+    }
+
+    public function deleteImport($id): bool
+    {
+        Log::debug('Consat import delete. Booo!');
+        return true;
+    }
+
+    /**
+     * @param Exception $except
+     *
+     * @return string
+     */
+    protected function exceptionToStr(Exception $except)
+    {
+        return sprintf(
+            "%s(%d): %s\n%s",
+            $except->getFile(),
+            $except->getLine(),
+            $except->getMessage(),
+            $except->getTraceAsString()
+        );
     }
 }

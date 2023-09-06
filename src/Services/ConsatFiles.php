@@ -3,12 +3,7 @@
 namespace TromsFylkestrafikk\RagnarokConsat\Services;
 
 use Illuminate\Contracts\Filesystem\Filesystem;
-use TromsFylkestrafikk\RagnarokConsat\Models\Call;
-use TromsFylkestrafikk\RagnarokConsat\Models\CallDetail;
-use TromsFylkestrafikk\RagnarokConsat\Models\Destination;
-use TromsFylkestrafikk\RagnarokConsat\Models\PassengerCount;
-use TromsFylkestrafikk\RagnarokConsat\Models\PlannedJourney;
-use TromsFylkestrafikk\RagnarokConsat\Models\Stop;
+use TromsFylkestrafikk\RagnarokSink\Models\RawFile;
 use TromsFylkestrafikk\RagnarokSink\Traits\LogPrintf;
 use TromsFylkestrafikk\RagnarokSink\Services\RemoteFiles;
 use TromsFylkestrafikk\RagnarokSink\Services\LocalFiles;
@@ -33,6 +28,9 @@ class ConsatFiles
      */
     public $localFile = null;
 
+    /**
+     * @var Filesystem
+     */
     protected $remoteDisk = null;
 
     /**
@@ -48,6 +46,16 @@ class ConsatFiles
         $this->remoteDisk = $this->buildRemoteDisk();
         $this->remoteFile = new RemoteFiles('consat', $this->remoteDisk);
         $this->localFile = $this->remoteFile->getLocal();
+    }
+
+    /**
+     * @param string $dateStr Date to get zip file for.
+     *
+     * @return RawFile|null
+     */
+    public function retrieveFile($dateStr)
+    {
+        return $this->remoteFile->getFile($this->filenameFromDate($dateStr));
     }
 
     /**
@@ -73,6 +81,16 @@ class ConsatFiles
             return null;
         }
         return $matches['date'];
+    }
+
+    public function getRemoteDisk(): Filesystem
+    {
+        return $this->remoteDisk;
+    }
+
+    public function getLocalDisk(): Filesystem
+    {
+        return $this->localFile->getDisk();
     }
 
     protected function buildRemoteDisk(): Filesystem
