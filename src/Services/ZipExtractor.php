@@ -54,6 +54,9 @@ class ZipExtractor
     /**
      * Get all files in archive.
      *
+     * Note: Files here are relative to the filesystem/disk used by
+     * $this->getDisk()
+     *
      * @return array
      */
     public function getFiles()
@@ -96,7 +99,6 @@ class ZipExtractor
      */
     public function cleanUp()
     {
-        // return $this->getDisk()->deleteDirectory($this->getOutputDir());
-        return true;
+        return $this->getDisk()->deleteDirectory($this->getOutputDir());
     }
 }
