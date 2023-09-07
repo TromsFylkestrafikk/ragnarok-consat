@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class Destination extends Model
 {
     public $timestamps = false;
-    protected $table = 'consat_historic_destinations';
+    protected $table = 'consat_destinations';
 }

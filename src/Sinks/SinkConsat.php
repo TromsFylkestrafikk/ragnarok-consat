@@ -4,23 +4,21 @@ namespace TromsFylkestrafikk\RagnarokConsat\Sinks;
 
 use Exception;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
-use TromsFylkestrafikk\RagnarokConsat\Services\ConsatFiles;
+use TromsFylkestrafikk\RagnarokConsat\Facades\ConsatFiles;
+use TromsFylkestrafikk\RagnarokConsat\Facades\ConsatImporter;
 use TromsFylkestrafikk\RagnarokSink\Sinks\SinkBase;
+use TromsFylkestrafikk\RagnarokSink\Traits\LogPrintf;
 
 class SinkConsat extends SinkBase
 {
+    use LogPrintf;
+
     public $id = "consat";
     public $title = "Consat";
 
-    /**
-     * @var ConsatFiles
-     */
-    protected $consat = null;
-
     public function __construct()
     {
-        $this->consat = app(ConsatFiles::class);
+        $this->logPrintfInit('[SinkConsat]: ');
     }
 
     /**
@@ -45,7 +43,7 @@ class SinkConsat extends SinkBase
     public function fetch($id): bool
     {
         try {
-            $file = $this->consat->remoteFile->getFile($this->consat->filenameFromDate($id));
+            $file = ConsatFiles::retrieveFile($id);
         } catch (Exception $except) {
             return false;
         }
@@ -57,16 +55,43 @@ class SinkConsat extends SinkBase
      */
     public function removeChunk($id): bool
     {
-        $this->consat->localFile->rmFile($this->consat->filenameFromDate($id));
+        ConsatFiles::getLocal()->rmFile(ConsatFiles::filenameFromDate($id));
         return true;
     }
 
     /**
      * @inheritdoc
      */
-    public function import(): bool
+    public function import($id): bool
     {
-        Log::debug('Consat import. Yay!');
+        try {
+            ConsatImporter::deleteImport($id)->import($id);
+        } catch (Exception $except) {
+            $this->error($this->exceptionToStr($except));
+            return false;
+        }
         return true;
+    }
+
+    public function deleteImport($id): bool
+    {
+        ConsatImporter::deleteImport($id);
+        return true;
+    }
+
+    /**
+     * @param Exception $except
+     *
+     * @return string
+     */
+    protected function exceptionToStr(Exception $except)
+    {
+        return sprintf(
+            "%s(%d): %s\n%s",
+            $except->getFile(),
+            $except->getLine(),
+            $except->getMessage(),
+            $except->getTraceAsString()
+        );
     }
 }

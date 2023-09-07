@@ -2,10 +2,12 @@
 
 return [
     /*
+     |--------------------------------------------------------------------------
      | Remote file system disk for Consat
-     | ----------------------------------
+     |--------------------------------------------------------------------------
      |
      | This uses the same options as given in laravel's config/filesystems.php
+     |
      */
     'remote_disk' => [
         'driver' => 'sftp',
@@ -18,4 +20,12 @@ return [
         'visibility' => 'public',
         'directory_visibility' => 'public',
     ],
+
+    /*
+     |--------------------------------------------------------------------------
+     | Disk name used for temporary files
+     |--------------------------------------------------------------------------
+     |
+     */
+    'tmp_disk' => 'tmp',
 ];

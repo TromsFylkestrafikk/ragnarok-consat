@@ -9,14 +9,15 @@ class RagnarokConsatTables extends Migration
     public function up(): void
     {
         Schema::create('consat_planned_journeys', function (Blueprint $table) {
-            $table->unsignedBigInteger('id')->primary();
+            $table->unsignedBigInteger('id');
             $table->date('date');
             $table->char('journey_id', 128);
             $table->char('line_id', 128);
-            $table->unsignedSmallInteger('line');
-            $table->unsignedSmallInteger('trip');
-            $table->unsignedSmallInteger('company');
+            $table->unsignedInteger('line');
+            $table->unsignedInteger('trip');
+            $table->unsignedInteger('company');
 
+            $table->primary(['date', 'id']);
             $table->index(['date','journey_id']);
         });
 
@@ -26,15 +27,15 @@ class RagnarokConsatTables extends Migration
             $table->unsignedInteger('planned_journey_id');
             $table->smallInteger('sequence')->nullable();
             $table->unsignedInteger('stop_point_id')->nullable();
-            $table->smallInteger('stop_duration')->nullable()->comment('Stop duration in seconds');
+            $table->integer('stop_duration')->nullable()->comment('Stop duration in seconds');
             $table->datetime('planned_arrival')->nullable();
             $table->datetime('planned_departure')->nullable();
             $table->datetime('actual_arrival')->nullable();
             $table->datetime('actual_departure')->nullable();
-            $table->smallInteger('distance_next_point')->nullable()->comment('Measured distance to next point in journey');
+            $table->integer('distance_next_point')->nullable()->comment('Measured distance to next point in journey');
             $table->integer('delay')->nullable();
             $table->char('vehicle', 64)->nullable();
-            $table->boolean('valid')->default(false);
+            $table->boolean('valid')->nullable()->default(false);
 
             $table->primary(['date', 'id']);
             $table->index(['date', 'planned_journey_id']);
@@ -54,16 +55,17 @@ class RagnarokConsatTables extends Migration
         });
 
         Schema::create('consat_passenger_count', function (Blueprint $table) {
-            $table->unsignedBigInteger('id')->primary();
+            $table->unsignedBigInteger('id');
             $table->date('date');
             $table->timestamp('timestamp');
             $table->unsignedInteger('call_id');
-            $table->unsignedInteger('on_board')->default(0);
-            $table->unsignedSmallInteger('in')->default(0);
-            $table->unsignedSmallInteger('out')->default(0);
-            $table->unsignedSmallInteger('from_last_journey')->nullable();
-            $table->boolean('valid')->default(false);
+            $table->integer('on_board')->default(0);
+            $table->smallInteger('in')->default(0);
+            $table->smallInteger('out')->default(0);
+            $table->smallInteger('from_last_journey')->nullable();
+            $table->boolean('valid')->nullable()->default(false);
 
+            $table->primary(['date', 'id']);
             $table->index(['date', 'call_id']);
         });
 
