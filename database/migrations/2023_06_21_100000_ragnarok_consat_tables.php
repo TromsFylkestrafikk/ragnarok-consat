@@ -13,9 +13,9 @@ class RagnarokConsatTables extends Migration
             $table->date('date');
             $table->char('journey_id', 128);
             $table->char('line_id', 128);
-            $table->unsignedSmallInteger('line');
-            $table->unsignedSmallInteger('trip');
-            $table->unsignedSmallInteger('company');
+            $table->unsignedInteger('line');
+            $table->unsignedInteger('trip');
+            $table->unsignedInteger('company');
 
             $table->primary(['date', 'id']);
             $table->index(['date','journey_id']);
