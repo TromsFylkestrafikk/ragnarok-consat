@@ -4,7 +4,6 @@ namespace TromsFylkestrafikk\RagnarokConsat\Services;
 
 use Illuminate\Support\Facades\DB;
 use TromsFylkestrafikk\RagnarokConsat\Facades\ConsatFiles;
-use TromsFylkestrafikk\RagnarokSink\Models\RawFile;
 
 /**
  * Handle logic around importing zip archives to database.
