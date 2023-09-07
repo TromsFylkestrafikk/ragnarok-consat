@@ -4,9 +4,8 @@ namespace TromsFylkestrafikk\RagnarokConsat\Sinks;
 
 use Exception;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
-use TromsFylkestrafikk\RagnarokConsat\Services\ConsatFiles;
-use TromsFylkestrafikk\RagnarokConsat\Services\ConsatImporter;
+use TromsFylkestrafikk\RagnarokConsat\Facades\ConsatFiles;
+use TromsFylkestrafikk\RagnarokConsat\Facades\ConsatImporter;
 use TromsFylkestrafikk\RagnarokSink\Sinks\SinkBase;
 use TromsFylkestrafikk\RagnarokSink\Traits\LogPrintf;
 
@@ -17,14 +16,8 @@ class SinkConsat extends SinkBase
     public $id = "consat";
     public $title = "Consat";
 
-    /**
-     * @var ConsatFiles
-     */
-    protected $consat = null;
-
     public function __construct()
     {
-        $this->consat = app(ConsatFiles::class);
         $this->logPrintfInit('[SinkConsat]: ');
     }
 
@@ -50,7 +43,7 @@ class SinkConsat extends SinkBase
     public function fetch($id): bool
     {
         try {
-            $file = $this->consat->retrieveFile($id);
+            $file = ConsatFiles::retrieveFile($id);
         } catch (Exception $except) {
             return false;
         }
@@ -62,7 +55,7 @@ class SinkConsat extends SinkBase
      */
     public function removeChunk($id): bool
     {
-        $this->consat->localFile->rmFile($this->consat->filenameFromDate($id));
+        ConsatFiles::getLocal()->rmFile(ConsatFiles::filenameFromDate($id));
         return true;
     }
 
@@ -71,9 +64,8 @@ class SinkConsat extends SinkBase
      */
     public function import($id): bool
     {
-        $importer = new ConsatImporter();
         try {
-            $importer->import($id);
+            ConsatImporter::deleteImport($id)->import($id);
         } catch (Exception $except) {
             $this->error($this->exceptionToStr($except));
             return false;
@@ -83,7 +75,7 @@ class SinkConsat extends SinkBase
 
     public function deleteImport($id): bool
     {
-        Log::debug('Consat import delete. Booo!');
+        ConsatImporter::deleteImport($id);
         return true;
     }
 

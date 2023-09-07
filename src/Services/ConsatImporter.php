@@ -2,6 +2,8 @@
 
 namespace TromsFylkestrafikk\RagnarokConsat\Services;
 
+use Illuminate\Support\Facades\DB;
+use TromsFylkestrafikk\RagnarokConsat\Facades\ConsatFiles;
 use TromsFylkestrafikk\RagnarokSink\Models\RawFile;
 
 /**
@@ -10,18 +12,13 @@ use TromsFylkestrafikk\RagnarokSink\Models\RawFile;
 class ConsatImporter
 {
     /**
-     * @var ConsatFiles
+     * @param string $dateStr Date in 'yyyy-mm-dd' format.
+     *
+     * @return $this
      */
-    protected $consat;
-
-    public function __construct()
-    {
-        $this->consat = app(ConsatFiles::class);
-    }
-
     public function import($dateStr)
     {
-        $file = $this->consat->localFile->getFile($this->consat->filenameFromDate($dateStr));
+        $file = ConsatFiles::getLocal()->getFile(ConsatFiles::filenameFromDate($dateStr));
         $extractor = new ZipExtractor($file);
         $mapFactory = new ConsatMapper($extractor->getDisk());
         foreach ($extractor->getFiles() as $csvFile) {
@@ -32,6 +29,28 @@ class ConsatImporter
             $mapper->exec()->logSummary();
         }
         $extractor->cleanUp();
-        return true;
+        return $this;
+    }
+
+    /**
+     * @param string $dateStr
+     *
+     * @return $this
+     */
+    public function deleteImport($dateStr)
+    {
+        $tables = [
+            'consat_planned_journeys',
+            'consat_calls',
+            'consat_call_details',
+            'consat_passenger_count',
+            'consat_stops',
+            'consat_destinations'
+        ];
+
+        foreach ($tables as $table) {
+            DB::table($table)->where('date', $dateStr)->delete();
+        }
+        return $this;
     }
 }

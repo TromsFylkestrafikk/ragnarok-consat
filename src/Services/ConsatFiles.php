@@ -21,12 +21,12 @@ class ConsatFiles
     /**
      * @var RemoteFiles
      */
-    public $remoteFile = null;
+    protected $remoteFile = null;
 
     /**
      * @var LocalFiles
      */
-    public $localFile = null;
+    protected $localFile = null;
 
     /**
      * @var Filesystem
@@ -43,9 +43,6 @@ class ConsatFiles
     public function __construct()
     {
         $this->logPrintfInit('[ConsatService]: ');
-        $this->remoteDisk = $this->buildRemoteDisk();
-        $this->remoteFile = new RemoteFiles('consat', $this->remoteDisk);
-        $this->localFile = $this->remoteFile->getLocal();
     }
 
     /**
@@ -55,7 +52,7 @@ class ConsatFiles
      */
     public function retrieveFile($dateStr)
     {
-        return $this->remoteFile->getFile($this->filenameFromDate($dateStr));
+        return $this->getRemote()->getFile($this->filenameFromDate($dateStr));
     }
 
     /**
@@ -76,25 +73,39 @@ class ConsatFiles
     public function getDateFromFilename($filename)
     {
         $matches = [];
-        $hit = preg_match(ConsatFiles::DATE_REGEX, $filename, $matches);
+        $hit = preg_match(self::DATE_REGEX, $filename, $matches);
         if (!$hit) {
             return null;
         }
         return $matches['date'];
     }
 
+    public function getLocal(): LocalFiles
+    {
+        if ($this->localFile === null) {
+            $this->localFile = $this->getRemote()->getLocal();
+        }
+        return $this->localFile;
+    }
+
+    public function getRemote(): RemoteFiles
+    {
+        if ($this->remoteFile === null) {
+            $this->remoteFile = new RemoteFiles('consat', $this->remoteDisk);
+        }
+        return $this->remoteFile;
+    }
+
     public function getRemoteDisk(): Filesystem
     {
+        if ($this->remoteDisk === null) {
+            $this->remoteDisk = app('filesystem')->build(config('ragnarok_consat.remote_disk'));
+        }
         return $this->remoteDisk;
     }
 
     public function getLocalDisk(): Filesystem
     {
-        return $this->localFile->getDisk();
-    }
-
-    protected function buildRemoteDisk(): Filesystem
-    {
-        return app('filesystem')->build(config('ragnarok_consat.remote_disk'));
+        return $this->getLocal()->getDisk();
     }
 }

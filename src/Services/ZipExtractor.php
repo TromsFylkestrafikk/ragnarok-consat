@@ -5,6 +5,7 @@ namespace TromsFylkestrafikk\RagnarokConsat\Services;
 use Archive7z\Archive7z;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Filesystem\Filesystem;
+use TromsFylkestrafikk\RagnarokConsat\Facades\ConsatFiles;
 use TromsFylkestrafikk\RagnarokSink\Models\RawFile;
 
 class ZipExtractor
@@ -15,18 +16,13 @@ class ZipExtractor
     protected $outputDir = null;
 
     /**
-     * @var ConsatFiles
-     */
-    protected $consat;
-
-    /**
      * @var Filesystem
      */
     protected $tmpDisk;
 
     public function __construct(protected RawFile $zipFile)
     {
-        $this->consat = app(ConsatFiles::class);
+        //
     }
 
     public function __destruct()
@@ -41,7 +37,7 @@ class ZipExtractor
      */
     public function extractContent()
     {
-        $zFilepath = $this->consat->getLocalDisk()->path($this->zipFile->name);
+        $zFilepath = ConsatFiles::getLocalDisk()->path($this->zipFile->name);
 
         $filebase = basename($this->zipFile->name, '.7z');
         $this->outputDir = uniqid("consat-{$filebase}-");
