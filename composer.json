@@ -46,8 +46,8 @@
     },
     "repositories": [
         {
-            "type": "path",
-            "url": "../ragnarok-sink"
+            "type": "github",
+            "url": "https://github.com/TromsFylkestrafikk/ragnarok-sink"
         }
     ],
     "extra": {
