@@ -1,8 +1,8 @@
 <?php
 
-namespace TromsFylkestrafikk\RagnarokConsat\Tests;
+namespace Ragnarok\Consat\Tests;
 
-use TromsFylkestrafikk\RagnarokConsat\RagnarokConsatServiceProvider;
+use Ragnarok\Consat\RagnarokConsatServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase

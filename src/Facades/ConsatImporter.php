@@ -1,13 +1,13 @@
 <?php
 
-namespace TromsFylkestrafikk\RagnarokConsat\Facades;
+namespace Ragnarok\Consat\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use TromsFylkestrafikk\RagnarokConsat\Services\ConsatImporter as CImporter;
+use Ragnarok\Consat\Services\ConsatImporter as CImporter;
 
 /**
- * @method static \TromsFylkestrafikk\RagnarokConsat\Services\ConsatImporter import(string $dateStr)
- * @method static \TromsFylkestrafikk\RagnarokConsat\Services\ConsatImporter deleteImport(string $dateStr)
+ * @method static \Ragnarok\Consat\Services\ConsatImporter import(string $dateStr)
+ * @method static \Ragnarok\Consat\Services\ConsatImporter deleteImport(string $dateStr)
  */
 class ConsatImporter extends Facade
 {

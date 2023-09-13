@@ -1,16 +1,16 @@
 <?php
 
-namespace TromsFylkestrafikk\RagnarokConsat\Facades;
+namespace Ragnarok\Consat\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use TromsFylkestrafikk\RagnarokConsat\Services\ConsatFiles as CFiles;
+use Ragnarok\Consat\Services\ConsatFiles as CFiles;
 
 /**
- * @method static \TromsFylkestrafikk\RagnarokSink\Models\RawFile retrieveFile(string $dateStr)
+ * @method static \Ragnarok\Sink\Models\RawFile retrieveFile(string $dateStr)
  * @method static string filenameFromDate(string $dateStr)
  * @method static string|null getDateFromFilename(string $filename)
- * @method static \TromsFylkestrafikk\RagnarokSink\Services\RemoteFiles getRemote()
- * @method static \TromsFylkestrafikk\RagnarokSink\Services\LocalFiles getLocal()
+ * @method static \Ragnarok\Sink\Services\RemoteFiles getRemote()
+ * @method static \Ragnarok\Sink\Services\LocalFiles getLocal()
  * @method static \Illuminate\Contracts\Filesystem\Filesystem getLocalDisk()
  * @method static \Illuminate\Contracts\Filesystem\Filesystem getRemoteDisk()
  */

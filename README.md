@@ -4,7 +4,7 @@
 ## Install
 
 ```bash
-composer require tromsfylkestrafikk/ragnarok-consat
+composer require ragnarok/consat
 ```
 
 

@@ -1,7 +1,8 @@
 {
-    "name": "tromsfylkestrafikk/ragnarok-consat",
-    "description": "Ragnarok datasink from Consat",
+    "name": "ragnarok/consat",
+    "description": "Ragnarok datasink for Consat",
     "type": "library",
+    "homepage": "https://github.com/tromsfylkestrafikk/ragnarok-consat",
     "license": "GPL-3.0-or-later",
     "keywords": [],
     "authors": [
@@ -19,7 +20,7 @@
         "illuminate/database": "^10.0",
         "illuminate/support": "^10.0",
         "league/flysystem-sftp-v3": "^3.15",
-        "tromsfylkestrafikk/ragnarok-sink": "dev-main"
+        "ragnarok/sink": "dev-main"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.6",
@@ -31,12 +32,12 @@
     },
     "autoload": {
         "psr-4": {
-            "TromsFylkestrafikk\\RagnarokConsat\\": "src/"
+            "Ragnarok\\Consat\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "TromsFylkestrafikk\\RagnarokConsat\\Tests\\":"tests/"
+            "Ragnarok\\Consat\\Tests\\":"tests/"
         }
     },
     "config": {
@@ -45,14 +46,14 @@
     },
     "repositories": [
         {
-            "type": "github",
-            "url": "https://github.com/TromsFylkestrafikk/ragnarok-sink"
+            "type": "path",
+            "url": "../ragnarok-sink"
         }
     ],
     "extra": {
         "laravel": {
             "providers": [
-                "TromsFylkestrafikk\\RagnarokConsat\\RagnarokConsatServiceProvider"
+                "Ragnarok\\Consat\\RagnarokConsatServiceProvider"
             ]
         }
     }

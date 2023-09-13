@@ -1,12 +1,12 @@
 <?php
 
-namespace TromsFylkestrafikk\RagnarokConsat\Services;
+namespace Ragnarok\Consat\Services;
 
 use Archive7z\Archive7z;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Filesystem\Filesystem;
-use TromsFylkestrafikk\RagnarokConsat\Facades\ConsatFiles;
-use TromsFylkestrafikk\RagnarokSink\Models\RawFile;
+use Ragnarok\Consat\Facades\ConsatFiles;
+use Ragnarok\Sink\Models\RawFile;
 
 class ZipExtractor
 {

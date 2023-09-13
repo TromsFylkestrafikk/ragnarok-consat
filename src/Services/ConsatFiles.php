@@ -1,12 +1,12 @@
 <?php
 
-namespace TromsFylkestrafikk\RagnarokConsat\Services;
+namespace Ragnarok\Consat\Services;
 
 use Illuminate\Contracts\Filesystem\Filesystem;
-use TromsFylkestrafikk\RagnarokSink\Models\RawFile;
-use TromsFylkestrafikk\RagnarokSink\Traits\LogPrintf;
-use TromsFylkestrafikk\RagnarokSink\Services\RemoteFiles;
-use TromsFylkestrafikk\RagnarokSink\Services\LocalFiles;
+use Ragnarok\Sink\Models\RawFile;
+use Ragnarok\Sink\Traits\LogPrintf;
+use Ragnarok\Sink\Services\RemoteFiles;
+use Ragnarok\Sink\Services\LocalFiles;
 use Illuminate\Support\Carbon;
 
 /**
@@ -91,7 +91,7 @@ class ConsatFiles
     public function getRemote(): RemoteFiles
     {
         if ($this->remoteFile === null) {
-            $this->remoteFile = new RemoteFiles('consat', $this->remoteDisk);
+            $this->remoteFile = new RemoteFiles('consat', $this->getRemoteDisk());
         }
         return $this->remoteFile;
     }

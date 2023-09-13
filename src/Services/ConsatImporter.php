@@ -1,9 +1,9 @@
 <?php
 
-namespace TromsFylkestrafikk\RagnarokConsat\Services;
+namespace Ragnarok\Consat\Services;
 
 use Illuminate\Support\Facades\DB;
-use TromsFylkestrafikk\RagnarokConsat\Facades\ConsatFiles;
+use Ragnarok\Consat\Facades\ConsatFiles;
 
 /**
  * Handle logic around importing zip archives to database.

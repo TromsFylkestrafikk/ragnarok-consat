@@ -1,8 +1,8 @@
 <?php
 
-namespace TromsFylkestrafikk\RagnarokConsat\Tests\Feature;
+namespace Ragnarok\Consat\Tests\Feature;
 
-use TromsFylkestrafikk\RagnarokConsat\Tests\TestCase;
+use Ragnarok\Consat\Tests\TestCase;
 
 class ExampleTest extends TestCase
 {

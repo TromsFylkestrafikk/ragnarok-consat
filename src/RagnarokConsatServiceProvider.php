@@ -1,11 +1,11 @@
 <?php
 
-namespace TromsFylkestrafikk\RagnarokConsat;
+namespace Ragnarok\Consat;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use TromsFylkestrafikk\RagnarokConsat\Services\ConsatFiles;
-use TromsFylkestrafikk\RagnarokConsat\Services\ConsatImporter;
+use Ragnarok\Consat\Services\ConsatFiles;
+use Ragnarok\Consat\Services\ConsatImporter;
 
 class RagnarokConsatServiceProvider extends ServiceProvider
 {
@@ -56,7 +56,7 @@ class RagnarokConsatServiceProvider extends ServiceProvider
     private function routeConfiguration(): array
     {
         return [
-            'namespace'  => "TromsFylkestrafikk\RagnarokConsat\Http\Controllers",
+            'namespace'  => "Ragnarok\Consat\Http\Controllers",
             'middleware' => 'api',
             'prefix'     => 'api'
         ];

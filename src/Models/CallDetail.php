@@ -1,6 +1,6 @@
 <?php
 
-namespace TromsFylkestrafikk\RagnarokConsat\Models;
+namespace Ragnarok\Consat\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

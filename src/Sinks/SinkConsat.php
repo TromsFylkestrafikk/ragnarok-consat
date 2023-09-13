@@ -1,13 +1,13 @@
 <?php
 
-namespace TromsFylkestrafikk\RagnarokConsat\Sinks;
+namespace Ragnarok\Consat\Sinks;
 
 use Exception;
 use Illuminate\Support\Carbon;
-use TromsFylkestrafikk\RagnarokConsat\Facades\ConsatFiles;
-use TromsFylkestrafikk\RagnarokConsat\Facades\ConsatImporter;
-use TromsFylkestrafikk\RagnarokSink\Sinks\SinkBase;
-use TromsFylkestrafikk\RagnarokSink\Traits\LogPrintf;
+use Ragnarok\Consat\Facades\ConsatFiles;
+use Ragnarok\Consat\Facades\ConsatImporter;
+use Ragnarok\Sink\Sinks\SinkBase;
+use Ragnarok\Sink\Traits\LogPrintf;
 
 class SinkConsat extends SinkBase
 {

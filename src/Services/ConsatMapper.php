@@ -1,11 +1,11 @@
 <?php
 
-namespace TromsFylkestrafikk\RagnarokConsat\Services;
+namespace Ragnarok\Consat\Services;
 
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Carbon;
 use League\Csv\Reader;
-use TromsFylkestrafikk\RagnarokSink\Services\CsvToTable;
+use Ragnarok\Sink\Services\CsvToTable;
 
 /**
  * Map Csv files to CsvToTable processor objects
