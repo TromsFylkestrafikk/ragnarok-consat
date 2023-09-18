@@ -15,6 +15,7 @@ class SinkConsat extends SinkBase
 
     public $id = "consat";
     public $title = "Consat";
+    public $cron = '35 09 * * *';
 
     public function __construct()
     {
