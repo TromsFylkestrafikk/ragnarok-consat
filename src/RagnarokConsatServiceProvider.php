@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
 use Ragnarok\Consat\Services\ConsatFiles;
 use Ragnarok\Consat\Services\ConsatImporter;
+use Ragnarok\Consat\Sinks\SinkConsat;
+use Ragnarok\Sink\Facades\SinkRegistrar;
 
 class RagnarokConsatServiceProvider extends ServiceProvider
 {
@@ -23,6 +25,7 @@ class RagnarokConsatServiceProvider extends ServiceProvider
     {
         $this->publishConfig();
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        SinkRegistrar::register(SinkConsat::class);
         // $this->registerRoutes();
     }
 
