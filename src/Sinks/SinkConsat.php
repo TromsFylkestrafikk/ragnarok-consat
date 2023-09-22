@@ -13,8 +13,8 @@ class SinkConsat extends SinkBase
 {
     use LogPrintf;
 
-    public $id = "consat";
-    public $title = "Consat";
+    public static $id = 'consat';
+    public static $title = "Consat";
     public $cron = '35 09 * * *';
 
     public function __construct()
