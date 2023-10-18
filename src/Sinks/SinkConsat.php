@@ -2,7 +2,6 @@
 
 namespace Ragnarok\Consat\Sinks;
 
-use Exception;
 use Illuminate\Support\Carbon;
 use Ragnarok\Consat\Facades\ConsatFiles;
 use Ragnarok\Consat\Facades\ConsatImporter;
@@ -43,11 +42,7 @@ class SinkConsat extends SinkBase
      */
     public function fetch($id): bool
     {
-        try {
-            $file = ConsatFiles::retrieveFile($id);
-        } catch (Exception $except) {
-            return false;
-        }
+        $file = ConsatFiles::retrieveFile($id);
         return $file ? true : false;
     }
 
@@ -65,12 +60,7 @@ class SinkConsat extends SinkBase
      */
     public function import($id): bool
     {
-        try {
-            ConsatImporter::deleteImport($id)->import($id);
-        } catch (Exception $except) {
-            $this->error($this->exceptionToStr($except));
-            return false;
-        }
+        ConsatImporter::deleteImport($id)->import($id);
         return true;
     }
 
@@ -78,21 +68,5 @@ class SinkConsat extends SinkBase
     {
         ConsatImporter::deleteImport($id);
         return true;
-    }
-
-    /**
-     * @param Exception $except
-     *
-     * @return string
-     */
-    protected function exceptionToStr(Exception $except)
-    {
-        return sprintf(
-            "%s(%d): %s\n%s",
-            $except->getFile(),
-            $except->getLine(),
-            $except->getMessage(),
-            $except->getTraceAsString()
-        );
     }
 }
