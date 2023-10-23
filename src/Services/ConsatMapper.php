@@ -18,11 +18,23 @@ class ConsatMapper
     protected $csvDisk;
 
     /**
+     * Don't import or create mapper for these files.
+     *
+     * @var string[]
+     */
+    protected $exceptCsvs = [];
+
+    /**
      * @param Filesystem $disk Laravel disk/filesystem the csv files is found
      */
     public function __construct(Filesystem $disk)
     {
         $this->csvDisk = $disk;
+    }
+
+    public function except(string $csvFile)
+    {
+        $this->exceptCsvs[$csvFile] = $csvFile;
     }
 
     /**
@@ -35,6 +47,9 @@ class ConsatMapper
     public function getMapper($csvFile)
     {
         $filename = last(explode('/', $csvFile));
+        if (!empty($this->exceptCsvs[$filename])) {
+            return null;
+        }
         $methodName = 'map' . explode('.', $filename)[0];
         if (!method_exists(self::class, $methodName)) {
             return null;

@@ -2,6 +2,7 @@
 
 namespace Ragnarok\Consat\Services;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Ragnarok\Consat\Facades\ConsatFiles;
 
@@ -15,11 +16,12 @@ class ConsatImporter
      *
      * @return $this
      */
-    public function import($dateStr)
+    public function import($dateStr): ConsatImporter
     {
         $file = ConsatFiles::getLocal()->getFile(ConsatFiles::filenameFromDate($dateStr));
         $extractor = new ZipExtractor($file);
         $mapFactory = new ConsatMapper($extractor->getDisk());
+        $this->addMapperExceptions($mapFactory, $dateStr);
         foreach ($extractor->getFiles() as $csvFile) {
             $mapper = $mapFactory->getMapper($csvFile);
             if (!$mapper) {
@@ -36,7 +38,7 @@ class ConsatImporter
      *
      * @return $this
      */
-    public function deleteImport($dateStr)
+    public function deleteImport($dateStr): ConsatImporter
     {
         $tables = [
             'consat_planned_journeys',
@@ -49,6 +51,20 @@ class ConsatImporter
 
         foreach ($tables as $table) {
             DB::table($table)->where('date', $dateStr)->delete();
+        }
+        return $this;
+    }
+
+    /**
+     * Set what csv files to not import for given date.
+     */
+    protected function addMapperExceptions(ConsatMapper $mapFactory, string $dateStr): ConsatImporter
+    {
+        $today = today();
+        foreach (config('ragnarok_consat.max_age', []) as $csv => $period) {
+            if ((new Carbon($dateStr))->add($period)->isBefore($today)) {
+                $mapFactory->except($csv);
+            }
         }
         return $this;
     }
