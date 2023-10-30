@@ -8,6 +8,7 @@ use Ragnarok\Consat\Services\ConsatImporter as CImporter;
 /**
  * @method static \Ragnarok\Consat\Services\ConsatImporter import(string $dateStr)
  * @method static \Ragnarok\Consat\Services\ConsatImporter deleteImport(string $dateStr)
+ * @method static int getImportRecordCount()
  */
 class ConsatImporter extends Facade
 {

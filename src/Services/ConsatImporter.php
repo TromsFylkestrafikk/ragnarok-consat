@@ -11,6 +11,8 @@ use Ragnarok\Consat\Facades\ConsatFiles;
  */
 class ConsatImporter
 {
+    protected $importRecordCount = 0;
+
     /**
      * @param string $dateStr Date in 'yyyy-mm-dd' format.
      *
@@ -19,6 +21,7 @@ class ConsatImporter
     public function import($dateStr): ConsatImporter
     {
         $file = ConsatFiles::getLocal()->getFile(ConsatFiles::filenameFromDate($dateStr));
+        $this->importRecordCount = 0;
         $extractor = new ZipExtractor($file);
         $mapFactory = new ConsatMapper($extractor->getDisk());
         $this->addMapperExceptions($mapFactory, $dateStr);
@@ -27,7 +30,7 @@ class ConsatImporter
             if (!$mapper) {
                 continue;
             }
-            $mapper->exec()->logSummary();
+            $this->importRecordCount += $mapper->exec()->logSummary()->getProcessedRecords();
         }
         $extractor->cleanUp();
         return $this;
@@ -53,6 +56,11 @@ class ConsatImporter
             DB::table($table)->where('date', $dateStr)->delete();
         }
         return $this;
+    }
+
+    public function getImportRecordCount(): int
+    {
+        return $this->importRecordCount;
     }
 
     /**

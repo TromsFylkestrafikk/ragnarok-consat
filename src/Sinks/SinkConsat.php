@@ -40,10 +40,10 @@ class SinkConsat extends SinkBase
     /**
      * @inheritdoc
      */
-    public function fetch($id): bool
+    public function fetch($id): int
     {
         $file = ConsatFiles::retrieveFile($id);
-        return $file ? true : false;
+        return $file ? $file->size : 0;
     }
 
     /**
@@ -58,10 +58,10 @@ class SinkConsat extends SinkBase
     /**
      * @inheritdoc
      */
-    public function import($id): bool
+    public function import($id): int
     {
-        ConsatImporter::deleteImport($id)->import($id);
-        return true;
+        $importer = ConsatImporter::deleteImport($id)->import($id);
+        return $importer->getImportRecordCount();
     }
 
     public function deleteImport($id): bool
