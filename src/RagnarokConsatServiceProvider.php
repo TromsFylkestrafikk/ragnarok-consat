@@ -2,8 +2,10 @@
 
 namespace Ragnarok\Consat;
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Ragnarok\Consat\Jobs\DeleteAgedData;
 use Ragnarok\Consat\Services\ConsatFiles;
 use Ragnarok\Consat\Services\ConsatImporter;
 use Ragnarok\Consat\Sinks\SinkConsat;
@@ -27,6 +29,7 @@ class RagnarokConsatServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         SinkRegistrar::register(SinkConsat::class);
         // $this->registerRoutes();
+        $this->registerScheduledJobs();
     }
 
     /**
@@ -77,5 +80,14 @@ class RagnarokConsatServiceProvider extends ServiceProvider
                 __DIR__ . '/../config/ragnarok_consat.php' => config_path('ragnarok_consat.php'),
             ], ['config', 'ragnarok_consat', 'ragnarok_consat.config']);
         }
+    }
+
+    protected function registerScheduledJobs()
+    {
+        $this->app->booted(function () {
+            /** @var Schedule */
+            $schedule = $this->app->make(Schedule::class);
+            $schedule->job(DeleteAgedData::class)->daily();
+        });
     }
 }

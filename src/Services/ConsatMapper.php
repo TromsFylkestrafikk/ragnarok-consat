@@ -32,9 +32,10 @@ class ConsatMapper
         $this->csvDisk = $disk;
     }
 
-    public function except(string $csvFile)
+    public function except(string $csvFile): ConsatMapper
     {
         $this->exceptCsvs[$csvFile] = $csvFile;
+        return $this;
     }
 
     /**

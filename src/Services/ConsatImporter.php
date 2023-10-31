@@ -13,6 +13,15 @@ class ConsatImporter
 {
     protected $importRecordCount = 0;
 
+    protected $csvModelMap = [
+        'CallDetails.csv' => \Ragnarok\Consat\Models\CallDetail::class,
+        'Calls.csv' => \Ragnarok\Consat\Models\Call::class,
+        'PassengerCount.csv' => \Ragnarok\Consat\Models\PassengerCount::class,
+        'PlannedJourneys.csv' => \Ragnarok\Consat\Models\PlannedJourney::class,
+        'StopPoint.csv' => \Ragnarok\Consat\Models\Stop::class,
+        'Destination.csv' => \Ragnarok\Consat\Models\Destination::class,
+    ];
+
     /**
      * @param string $dateStr Date in 'yyyy-mm-dd' format.
      *
@@ -61,6 +70,14 @@ class ConsatImporter
     public function getImportRecordCount(): int
     {
         return $this->importRecordCount;
+    }
+
+    /**
+     * Get eloquent model used for given csv file.
+     */
+    public function getCsvModel(string $csv): string|null
+    {
+        return $this->csvModelMap[$csv] ?? null;
     }
 
     /**
