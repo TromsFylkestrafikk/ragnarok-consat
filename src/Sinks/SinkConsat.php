@@ -49,6 +49,14 @@ class SinkConsat extends SinkBase
     /**
      * @inheritdoc
      */
+    public function getChunkVersion($id): string
+    {
+        return ConsatFiles::getChunkFile($id)->checksum;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function removeChunk($id): bool
     {
         ConsatFiles::getLocal()->rmFile(ConsatFiles::filenameFromDate($id));

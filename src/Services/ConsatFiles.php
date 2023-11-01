@@ -7,6 +7,7 @@ use Ragnarok\Sink\Models\RawFile;
 use Ragnarok\Sink\Traits\LogPrintf;
 use Ragnarok\Sink\Services\RemoteFiles;
 use Ragnarok\Sink\Services\LocalFiles;
+use Ragnarok\Consat\Sinks\SinkConsat;
 use Illuminate\Support\Carbon;
 
 /**
@@ -55,6 +56,11 @@ class ConsatFiles
         return $this->getRemote()->getFile($this->filenameFromDate($dateStr));
     }
 
+    public function getChunkFile($dateStr)
+    {
+        return $this->getLocal()->getFile($this->filenameFromDate($dateStr));
+    }
+
     /**
      * Build file name used for daily dump.
      */
@@ -83,7 +89,7 @@ class ConsatFiles
     public function getLocal(): LocalFiles
     {
         if ($this->localFile === null) {
-            $this->localFile = $this->getRemote()->getLocal();
+            $this->localFile = new LocalFiles(SinkConsat::$id);
         }
         return $this->localFile;
     }
@@ -91,7 +97,7 @@ class ConsatFiles
     public function getRemote(): RemoteFiles
     {
         if ($this->remoteFile === null) {
-            $this->remoteFile = new RemoteFiles('consat', $this->getRemoteDisk());
+            $this->remoteFile = new RemoteFiles(SinkConsat::$id, $this->getLocal(), $this->getRemoteDisk());
         }
         return $this->remoteFile;
     }
