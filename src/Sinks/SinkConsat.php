@@ -3,6 +3,7 @@
 namespace Ragnarok\Consat\Sinks;
 
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Ragnarok\Consat\Facades\ConsatFiles;
 use Ragnarok\Consat\Facades\ConsatImporter;
 use Ragnarok\Sink\Sinks\SinkBase;
@@ -40,7 +41,7 @@ class SinkConsat extends SinkBase
     /**
      * @inheritdoc
      */
-    public function fetch($id): int
+    public function fetch(string $id): int
     {
         $file = ConsatFiles::retrieveFile($id);
         return $file ? $file->size : 0;
@@ -49,7 +50,7 @@ class SinkConsat extends SinkBase
     /**
      * @inheritdoc
      */
-    public function getChunkVersion($id): string
+    public function getChunkVersion(string $id): string
     {
         return ConsatFiles::getChunkFile($id)->checksum;
     }
@@ -57,7 +58,15 @@ class SinkConsat extends SinkBase
     /**
      * @inheritdoc
      */
-    public function removeChunk($id): bool
+    public function getChunkFiles(string $id): Collection
+    {
+        return ConsatFiles::getChunkFiles($id);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function removeChunk(string $id): bool
     {
         ConsatFiles::getLocal()->rmFile(ConsatFiles::filenameFromDate($id));
         return true;
@@ -66,13 +75,13 @@ class SinkConsat extends SinkBase
     /**
      * @inheritdoc
      */
-    public function import($id): int
+    public function import(string $id): int
     {
         $importer = ConsatImporter::deleteImport($id)->import($id);
         return $importer->getImportRecordCount();
     }
 
-    public function deleteImport($id): bool
+    public function deleteImport(string $id): bool
     {
         ConsatImporter::deleteImport($id);
         return true;

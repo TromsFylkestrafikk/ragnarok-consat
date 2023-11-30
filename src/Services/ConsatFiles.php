@@ -3,6 +3,7 @@
 namespace Ragnarok\Consat\Services;
 
 use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Database\Eloquent\Collection;
 use Ragnarok\Sink\Models\RawFile;
 use Ragnarok\Sink\Traits\LogPrintf;
 use Ragnarok\Sink\Services\RemoteFiles;
@@ -51,14 +52,29 @@ class ConsatFiles
      *
      * @return RawFile|null
      */
-    public function retrieveFile($dateStr)
+    public function retrieveFile(string $dateStr): RawFile|null
     {
         return $this->getRemote()->getFile($this->filenameFromDate($dateStr));
     }
 
-    public function getChunkFile($dateStr)
+    /**
+     * @param string $dateStr
+     *
+     * @return RawFile|null
+     */
+    public function getChunkFile(string $dateStr): RawFile|null
     {
         return $this->getLocal()->getFile($this->filenameFromDate($dateStr));
+    }
+
+    /**
+     * @param string $dateStr
+     *
+     * @return Collection
+     */
+    public function getChunkFiles(string $dateStr): Collection
+    {
+        return $this->getLocal()->getFilesLike($this->filenameFromDate($dateStr));
     }
 
     /**
