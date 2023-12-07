@@ -4,7 +4,7 @@ namespace Ragnarok\Consat\Services;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Ragnarok\Consat\Facades\ConsatFiles;
+use Ragnarok\Sink\Models\SinkFile;
 
 /**
  * Handle logic around importing zip archives to database.
@@ -27,9 +27,8 @@ class ConsatImporter
      *
      * @return $this
      */
-    public function import($dateStr): ConsatImporter
+    public function import(string $dateStr, SinkFile $file): ConsatImporter
     {
-        $file = ConsatFiles::getLocal()->getFile(ConsatFiles::filenameFromDate($dateStr));
         $this->importRecordCount = 0;
         $extractor = new ZipExtractor($file);
         $mapFactory = new ConsatMapper($extractor->getDisk());

@@ -6,7 +6,7 @@ use Archive7z\Archive7z;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Ragnarok\Consat\Facades\ConsatFiles;
-use Ragnarok\Sink\Models\RawFile;
+use Ragnarok\Sink\Models\SinkFile;
 
 class ZipExtractor
 {
@@ -20,7 +20,7 @@ class ZipExtractor
      */
     protected $tmpDisk;
 
-    public function __construct(protected RawFile $zipFile)
+    public function __construct(protected SinkFile $zipFile)
     {
         //
     }
