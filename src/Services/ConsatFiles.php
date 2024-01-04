@@ -3,11 +3,9 @@
 namespace Ragnarok\Consat\Services;
 
 use Illuminate\Contracts\Filesystem\Filesystem;
-use Illuminate\Database\Eloquent\Collection;
 use Ragnarok\Sink\Models\SinkFile;
 use Ragnarok\Sink\Traits\LogPrintf;
 use Ragnarok\Sink\Services\RemoteFiles;
-use Ragnarok\Sink\Services\LocalFiles;
 use Ragnarok\Consat\Sinks\SinkConsat;
 use Illuminate\Support\Carbon;
 
@@ -24,11 +22,6 @@ class ConsatFiles
      * @var RemoteFiles
      */
     protected $remoteFile = null;
-
-    /**
-     * @var LocalFiles
-     */
-    protected $localFile = null;
 
     /**
      * @var Filesystem
@@ -58,26 +51,6 @@ class ConsatFiles
     }
 
     /**
-     * @param string $dateStr
-     *
-     * @return SinkFile|null
-     */
-    public function getChunkFile(string $dateStr): SinkFile|null
-    {
-        return $this->getLocal()->getFile($this->filenameFromDate($dateStr));
-    }
-
-    /**
-     * @param string $dateStr
-     *
-     * @return Collection
-     */
-    public function getChunkFiles(string $dateStr): Collection
-    {
-        return $this->getLocal()->getFilesLike($this->filenameFromDate($dateStr));
-    }
-
-    /**
      * Build file name used for daily dump.
      */
     public function filenameFromDate(string $dateStr): string
@@ -85,35 +58,10 @@ class ConsatFiles
         return $dateStr . '.7z';
     }
 
-    /**
-     * Extract date portion of file name.
-     *
-     * @param string $filename
-     *
-     * @return string|null
-     */
-    public function getDateFromFilename($filename)
-    {
-        $matches = [];
-        $hit = preg_match(self::DATE_REGEX, $filename, $matches);
-        if (!$hit) {
-            return null;
-        }
-        return $matches['date'];
-    }
-
-    public function getLocal(): LocalFiles
-    {
-        if ($this->localFile === null) {
-            $this->localFile = new LocalFiles(SinkConsat::$id);
-        }
-        return $this->localFile;
-    }
-
     public function getRemote(): RemoteFiles
     {
         if ($this->remoteFile === null) {
-            $this->remoteFile = new RemoteFiles(SinkConsat::$id, $this->getLocal(), $this->getRemoteDisk());
+            $this->remoteFile = new RemoteFiles(SinkConsat::$id, $this->getRemoteDisk());
         }
         return $this->remoteFile;
     }
@@ -124,10 +72,5 @@ class ConsatFiles
             $this->remoteDisk = app('filesystem')->build(config('ragnarok_consat.remote_disk'));
         }
         return $this->remoteDisk;
-    }
-
-    public function getLocalDisk(): Filesystem
-    {
-        return $this->getLocal()->getDisk();
     }
 }

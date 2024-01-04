@@ -7,20 +7,12 @@ use Ragnarok\Consat\Facades\ConsatFiles;
 use Ragnarok\Consat\Facades\ConsatImporter;
 use Ragnarok\Sink\Models\SinkFile;
 use Ragnarok\Sink\Sinks\SinkBase;
-use Ragnarok\Sink\Traits\LogPrintf;
 
 class SinkConsat extends SinkBase
 {
-    use LogPrintf;
-
     public static $id = 'consat';
     public static $title = "Consat";
     public $cron = '35 09 * * *';
-
-    public function __construct()
-    {
-        $this->logPrintfInit('[SinkConsat]: ');
-    }
 
     /**
      * @inheritdoc
@@ -55,7 +47,7 @@ class SinkConsat extends SinkBase
         return $importer->getImportRecordCount();
     }
 
-    public function deleteImport(string $id): bool
+    public function deleteImport(string $id, SinkFile $file): bool
     {
         ConsatImporter::deleteImport($id);
         return true;
