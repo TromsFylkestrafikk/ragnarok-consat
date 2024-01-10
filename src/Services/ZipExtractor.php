@@ -6,7 +6,9 @@ use Archive7z\Archive7z;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Ragnarok\Consat\Facades\ConsatFiles;
-use Ragnarok\Sink\Models\RawFile;
+use Ragnarok\Consat\Sinks\SinkConsat;
+use Ragnarok\Sink\Models\SinkFile;
+use Ragnarok\Sink\Services\LocalFile;
 
 class ZipExtractor
 {
@@ -16,13 +18,18 @@ class ZipExtractor
     protected $outputDir = null;
 
     /**
+     * @var LocalFile
+     */
+    protected $local;
+
+    /**
      * @var Filesystem
      */
     protected $tmpDisk;
 
-    public function __construct(protected RawFile $zipFile)
+    public function __construct(protected SinkFile $zipFile)
     {
-        //
+        $this->local = new LocalFile(SinkConsat::$id, $zipFile);
     }
 
     public function __destruct()
@@ -37,12 +44,10 @@ class ZipExtractor
      */
     public function extractContent()
     {
-        $zFilepath = ConsatFiles::getLocalDisk()->path($this->zipFile->name);
-
         $filebase = basename($this->zipFile->name, '.7z');
         $this->outputDir = uniqid("consat-{$filebase}-");
         $this->getDisk()->makeDirectory($this->outputDir);
-        $archive = new Archive7z($zFilepath);
+        $archive = new Archive7z($this->local->getPath());
         $archive->setOutputDirectory($this->getDisk()->path($this->outputDir))->extract();
         return $this->outputDir;
     }

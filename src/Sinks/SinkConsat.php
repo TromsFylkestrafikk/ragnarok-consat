@@ -3,24 +3,16 @@
 namespace Ragnarok\Consat\Sinks;
 
 use Illuminate\Support\Carbon;
-use Illuminate\Database\Eloquent\Collection;
 use Ragnarok\Consat\Facades\ConsatFiles;
 use Ragnarok\Consat\Facades\ConsatImporter;
+use Ragnarok\Sink\Models\SinkFile;
 use Ragnarok\Sink\Sinks\SinkBase;
-use Ragnarok\Sink\Traits\LogPrintf;
 
 class SinkConsat extends SinkBase
 {
-    use LogPrintf;
-
     public static $id = 'consat';
     public static $title = "Consat";
     public $cron = '35 09 * * *';
-
-    public function __construct()
-    {
-        $this->logPrintfInit('[SinkConsat]: ');
-    }
 
     /**
      * @inheritdoc
@@ -41,47 +33,21 @@ class SinkConsat extends SinkBase
     /**
      * @inheritdoc
      */
-    public function fetch(string $id): int
+    public function fetch(string $id): SinkFile|null
     {
-        $file = ConsatFiles::retrieveFile($id);
-        return $file ? $file->size : 0;
+        return ConsatFiles::retrieveFile($id);
     }
 
     /**
      * @inheritdoc
      */
-    public function getChunkVersion(string $id): string
+    public function import(string $id, SinkFile $file): int
     {
-        return ConsatFiles::getChunkFile($id)->checksum;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getChunkFiles(string $id): Collection
-    {
-        return ConsatFiles::getChunkFiles($id);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function removeChunk(string $id): bool
-    {
-        ConsatFiles::getLocal()->rmFile(ConsatFiles::filenameFromDate($id));
-        return true;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function import(string $id): int
-    {
-        $importer = ConsatImporter::deleteImport($id)->import($id);
+        $importer = ConsatImporter::deleteImport($id)->import($id, $file);
         return $importer->getImportRecordCount();
     }
 
-    public function deleteImport(string $id): bool
+    public function deleteImport(string $id, SinkFile $file): bool
     {
         ConsatImporter::deleteImport($id);
         return true;
