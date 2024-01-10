@@ -14,6 +14,8 @@ return [
         'host' =>  env('CONSAT_HOST'),
         'username' => env('CONSAT_USERNAME'),
         'password' => env('CONSAT_PASSWORD'),
+        'privateKey' => env('CONSAT_PRIVATE_KEY'),
+        'passphrase' => env('CONSAT_PASSPHRASE'),
         'port' => (int) env('CONSAT_PORT', 22),
         'root' => env('CONSAT_ROOT', '/'),
         'timeout' => 30,
