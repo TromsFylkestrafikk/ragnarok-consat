@@ -17,6 +17,21 @@ class SinkConsat extends SinkBase
     /**
      * @inheritdoc
      */
+    public function destinationTables(): array
+    {
+        return [
+            'consat_planned_journeys' => 'All journeys for a given day',
+            'consat_calls' => 'All calls at all stops for all journeys',
+            'consat_call_details' => 'All vehicle events. Grouped by call. Due to its massive size, old data may be deleted',
+            'consat_passenger_count' => 'Automatic Passenger Counted data. Aggregated per call.',
+            'consat_stops' => 'All stops involved in route set per day',
+            'consat_destinations' => 'Destination texts in route set per day',
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getFromDate(): Carbon
     {
         return new Carbon('2019-01-01');
