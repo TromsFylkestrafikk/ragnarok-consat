@@ -58,6 +58,18 @@ class ConsatFiles
         return $dateStr . '.7z';
     }
 
+    /**
+     * Given a chunk file name, get the date from it.
+     *
+     * It's expected to match the pattern YYYY-MM-DD.7z
+     */
+    public function dateFromFilename(string $filename): string|null
+    {
+        $matches = [];
+        $hits = preg_match('|(?P<date>\d{4}-\d{2}-\d{2})\.7z$|', $filename, $matches);
+        return $hits ? $matches['date'] : null;
+    }
+
     public function getRemote(): RemoteFiles
     {
         if ($this->remoteFile === null) {

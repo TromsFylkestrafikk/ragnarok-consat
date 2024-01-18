@@ -62,9 +62,20 @@ class SinkConsat extends SinkBase
         return $importer->getImportRecordCount();
     }
 
+    /**
+     * @inheritdoc
+     */
     public function deleteImport(string $id, SinkFile $file): bool
     {
         ConsatImporter::deleteImport($id);
         return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function filenameToChunkId(string $filename): string
+    {
+        return ConsatFiles::dateFromFilename($filename);
     }
 }
