@@ -1,6 +1,6 @@
 {
   "name": "ragnarok-consat",
-  "version": "0.0.1-dev",
+  "version": "0.1.0",
   "description": "Ragnarok data sink for Consat",
   "main": "index.js",
   "directories": {
