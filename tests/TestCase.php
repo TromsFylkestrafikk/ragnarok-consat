@@ -2,7 +2,7 @@
 
 namespace Ragnarok\Consat\Tests;
 
-use Ragnarok\Consat\RagnarokConsatServiceProvider;
+use Ragnarok\Consat\ConsatServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
@@ -32,6 +32,6 @@ class TestCase extends BaseTestCase
 
     protected function getPackageProviders($app)
     {
-        return [RagnarokConsatServiceProvider::class];
+        return [ConsatServiceProvider::class];
     }
 }

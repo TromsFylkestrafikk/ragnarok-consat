@@ -11,7 +11,7 @@ use Ragnarok\Consat\Services\ConsatImporter;
 use Ragnarok\Consat\Sinks\SinkConsat;
 use Ragnarok\Sink\Facades\SinkRegistrar;
 
-class RagnarokConsatServiceProvider extends ServiceProvider
+class ConsatServiceProvider extends ServiceProvider
 {
     public $singletons = [
         ConsatFiles::class => ConsatFiles::class,

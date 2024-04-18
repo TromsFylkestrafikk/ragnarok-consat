@@ -53,7 +53,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Ragnarok\\Consat\\RagnarokConsatServiceProvider"
+                "Ragnarok\\Consat\\ConsatServiceProvider"
             ]
         }
     }
