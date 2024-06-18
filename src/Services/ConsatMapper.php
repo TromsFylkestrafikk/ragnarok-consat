@@ -25,11 +25,19 @@ class ConsatMapper
     protected $exceptCsvs = [];
 
     /**
+     * Mapping: Consat stop => NSR quay.
+     *
+     * @var array
+     */
+    protected $stopMap = [];
+
+    /**
      * @param Filesystem $disk Laravel disk/filesystem the csv files is found
      */
-    public function __construct(Filesystem $disk)
+    public function __construct(Filesystem $disk, array $consatStops)
     {
         $this->csvDisk = $disk;
+        $this->stopMap = $consatStops;
     }
 
     public function except(string $csvFile): ConsatMapper
@@ -93,6 +101,10 @@ class ConsatMapper
         $mapper->column('VehicleIdentity', 'vehicle');
         $mapper->column('DelayOnDepartureSeconds', 'delay');
         $mapper->column('IsValid', 'valid')->format(fn ($valid) => (bool) $valid);
+        $mapper->preInsertRecord(function ($csvRec, &$dbRec) {
+            $dbRec['nsr_stop_id'] = $this->stopMap[$csvRec['UsesStopPointId']]['id'];
+            $dbRec['stop_name'] = $this->stopMap[$csvRec['UsesStopPointId']]['name'];
+        });
         return $mapper;
     }
 
