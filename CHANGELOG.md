@@ -1,7 +1,7 @@
 # Change log
 
 ## [Unreleased]
-### Fixed
+### Changed
 - NSR quay info mapped into the Calls table.
 
 ## [0.1.0] – 2024-04-18

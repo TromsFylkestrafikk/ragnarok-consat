@@ -50,7 +50,6 @@ class ConsatImporter
         }
 
         $mapFactory = new ConsatMapper($extractor->getDisk(), $stopData);
-        $mapFactory->except('StopPoint.csv');
         $this->addMapperExceptions($mapFactory, $dateStr);
         foreach ($extractor->getFiles() as $csvFile) {
             $mapper = $mapFactory->getMapper($csvFile);
