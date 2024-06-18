@@ -5,15 +5,15 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Columns for stop place ID and name moved.
+ * NSR quay info mapped into the consat_calls table.
  */
 return new class extends Migration
 {
     public function up(): void
     {
         Schema::table('consat_calls', function (Blueprint $table) {
-            $table->char('nsr_stop_id', 64)->after('sequence')->comment('NSR quay ID');
-            $table->string('stop_name')->after('nsr_stop_id')->comment('NSR quay name');
+            $table->char('nsr_quay_id', 64)->after('sequence')->comment('NSR quay ID');
+            $table->string('stop_name')->after('nsr_quay_id')->comment('Name of stop');
         });
     }
 
@@ -25,7 +25,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('consat_calls', function (Blueprint $table) {
-            $table->dropColumn(['nsr_stop_id', 'stop_name']);
+            $table->dropColumn(['nsr_quay_id', 'stop_name']);
         });
     }
 };
