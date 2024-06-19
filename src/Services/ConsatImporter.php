@@ -31,7 +31,25 @@ class ConsatImporter
     {
         $this->importRecordCount = 0;
         $extractor = new ZipExtractor($file);
-        $mapFactory = new ConsatMapper($extractor->getDisk());
+        $extractor->extractContent();
+
+        // Load stop points first and prepare for NSR quay mapping.
+        $stopFilePath = sprintf('%s/StopPoint.csv', $extractor->getFullOutputDir());
+        $stopData = [];
+        if (($handle = fopen($stopFilePath, 'r')) !== false) {
+            $csvCols = fgetcsv($handle, 0, ';');
+            while (($values = fgetcsv($handle, 0, ';')) !== false) {
+                if (count($csvCols) !== count($values)) continue;
+                $csvRow = array_combine($csvCols, $values);
+                $stopData[$csvRow['Id']] = [
+                    'id' => $csvRow['ExternalId'],
+                    'name' => $csvRow['Name'],
+                ];
+            }
+            fclose($handle);
+        }
+
+        $mapFactory = new ConsatMapper($extractor->getDisk(), $stopData);
         $this->addMapperExceptions($mapFactory, $dateStr);
         foreach ($extractor->getFiles() as $csvFile) {
             $mapper = $mapFactory->getMapper($csvFile);
