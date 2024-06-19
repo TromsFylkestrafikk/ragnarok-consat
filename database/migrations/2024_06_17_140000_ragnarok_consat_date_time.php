@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        $this->timestampToDatetime('consat_call_details', 'timestamp', 'Timestamp of event. Date + Time');
-        $this->timestampToDatetime('consat_passenger_count', 'timestamp', 'Timestamp of pax count. Date + Time');
+        // Re-structure keys / primary key.
+        Schema::table('consat_call_details', function (Blueprint $table) {
+            $table->dropPrimary(['call_id', 'timestamp']);
+        });
+        $this->timestampToDatetime('consat_call_details', 'timestamp', 'Timestamp of event. Date + Time', false);
+        $this->timestampToDatetime('consat_passenger_count', 'timestamp', 'Timestamp of pax count. Date + Time', false);
     }
 
     /**
