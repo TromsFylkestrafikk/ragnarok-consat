@@ -112,7 +112,7 @@ class ConsatMapper
     public function mapCallDetails($csvFile)
     {
         $mapper = $this->createMapper($csvFile, 'consat_call_details', ['date', 'id']);
-        $mapper->column('TimeStamp', 'timestamp')->required();
+        $mapper->column('TimeStamp', 'timestamp')->required()->format(fn ($input) => new Carbon($input));
         $mapper->column('OperatingCalendarDay', 'date')->required()->format([static::class, 'dateFormatter']);
         $mapper->column('StartsAtCallId', 'call_id')->required();
         $mapper->column('EventType', 'event_type');
@@ -127,7 +127,7 @@ class ConsatMapper
         $mapper = $this->createMapper($csvFile, 'consat_passenger_count', ['id']);
         $mapper->column('Id', 'id')->required();
         $mapper->column('OperatingCalendarDay', 'date')->required()->format([static::class, 'dateFormatter']);
-        $mapper->column('TimeStamp', 'timestamp')->required();
+        $mapper->column('TimeStamp', 'timestamp')->required()->format(fn ($input) => new Carbon($input));
         $mapper->column('HappensAtCallId', 'call_id')->required();
         $mapper->column('PassengersOnboard', 'on_board');
         $mapper->column('totalIn', 'in');
