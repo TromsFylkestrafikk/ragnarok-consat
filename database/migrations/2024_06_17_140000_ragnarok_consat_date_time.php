@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -32,10 +33,7 @@ return new class extends Migration
      */
     protected function timestampToDatetime(string $tableName, string $columnName, string $comment, $nullable = true)
     {
-        Schema::table($tableName, function (Blueprint $table) use ($columnName){
-            $table->renameColumn($columnName, $columnName . '_old');
-        });
-
+        DB::statement(sprintf('alter table %s rename column %s to %s', $tableName, $columnName, $columnName . '_old'));
         Schema::table($tableName, function (Blueprint $table) use ($columnName, $comment) {
             $table->dateTime($columnName)->nullable()->after($columnName . '_old')->comment($comment);
         });
