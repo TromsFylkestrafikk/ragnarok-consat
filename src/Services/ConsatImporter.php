@@ -13,13 +13,16 @@ class ConsatImporter
 {
     protected $importRecordCount = 0;
 
+    /**
+     * Map of CSVs to eloquent model.
+     */
     protected $csvModelMap = [
+        'StopPoint.csv' => \Ragnarok\Consat\Models\Stop::class,
         'CallDetails.csv' => \Ragnarok\Consat\Models\CallDetail::class,
         'Calls.csv' => \Ragnarok\Consat\Models\Call::class,
+        'Destination.csv' => \Ragnarok\Consat\Models\Destination::class,
         'PassengerCount.csv' => \Ragnarok\Consat\Models\PassengerCount::class,
         'PlannedJourneys.csv' => \Ragnarok\Consat\Models\PlannedJourney::class,
-        'StopPoint.csv' => \Ragnarok\Consat\Models\Stop::class,
-        'Destination.csv' => \Ragnarok\Consat\Models\Destination::class,
     ];
 
     /**
@@ -32,26 +35,9 @@ class ConsatImporter
         $this->importRecordCount = 0;
         $extractor = new ZipExtractor($file);
         $extractor->extractContent();
-
-        // Load stop points first and prepare for NSR quay mapping.
-        $stopFilePath = sprintf('%s/StopPoint.csv', $extractor->getFullOutputDir());
-        $stopData = [];
-        if (($handle = fopen($stopFilePath, 'r')) !== false) {
-            $csvCols = fgetcsv($handle, 0, ';');
-            while (($values = fgetcsv($handle, 0, ';')) !== false) {
-                if (count($csvCols) !== count($values)) continue;
-                $csvRow = array_combine($csvCols, $values);
-                $stopData[$csvRow['Id']] = [
-                    'id' => $csvRow['ExternalId'],
-                    'name' => $csvRow['Name'],
-                ];
-            }
-            fclose($handle);
-        }
-
-        $mapFactory = new ConsatMapper($extractor->getDisk(), $stopData);
+        $mapFactory = new ConsatMapper($extractor->getDisk());
         $this->addMapperExceptions($mapFactory, $dateStr);
-        foreach ($extractor->getFiles() as $csvFile) {
+        foreach ($this->prioritizeCsvs($extractor->getFiles()) as $csvFile) {
             $mapper = $mapFactory->getMapper($csvFile);
             if (!$mapper) {
                 continue;
@@ -95,6 +81,20 @@ class ConsatImporter
     public function getCsvModel(string $csv): string|null
     {
         return $this->csvModelMap[$csv] ?? null;
+    }
+
+    /**
+     * Sort csvs by priority.
+     */
+    protected function prioritizeCsvs(array $csvs)
+    {
+        $order = ['StopPoint.csv' => 1];
+        usort($csvs, function ($alice, $bob) use ($order) {
+            $aWeight = $order[basename($alice)] ?? 1000;
+            $bWeight = $order[basename($bob)] ?? 1000;
+            return $aWeight - $bWeight;
+        });
+        return $csvs;
     }
 
     /**
