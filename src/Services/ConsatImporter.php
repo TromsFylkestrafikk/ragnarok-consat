@@ -13,16 +13,13 @@ class ConsatImporter
 {
     protected $importRecordCount = 0;
 
-    /**
-     * Map of CSVs to eloquent model.
-     */
     protected $csvModelMap = [
-        'StopPoint.csv' => \Ragnarok\Consat\Models\Stop::class,
         'CallDetails.csv' => \Ragnarok\Consat\Models\CallDetail::class,
         'Calls.csv' => \Ragnarok\Consat\Models\Call::class,
-        'Destination.csv' => \Ragnarok\Consat\Models\Destination::class,
         'PassengerCount.csv' => \Ragnarok\Consat\Models\PassengerCount::class,
         'PlannedJourneys.csv' => \Ragnarok\Consat\Models\PlannedJourney::class,
+        'StopPoint.csv' => \Ragnarok\Consat\Models\Stop::class,
+        'Destination.csv' => \Ragnarok\Consat\Models\Destination::class,
     ];
 
     /**
