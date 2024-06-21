@@ -33,12 +33,10 @@ class ConsatMapper
 
     /**
      * @param Filesystem $disk Laravel disk/filesystem the csv files is found
-     * @param array $consatStops Array of stop/quay info
      */
-    public function __construct(Filesystem $disk, array $consatStops)
+    public function __construct(Filesystem $disk)
     {
         $this->csvDisk = $disk;
-        $this->stopMap = $consatStops;
     }
 
     public function except(string $csvFile): ConsatMapper
@@ -146,6 +144,15 @@ class ConsatMapper
         $mapper->column('Name', 'name')->required();
         $mapper->column('Latitude', 'latitude');
         $mapper->column('Longitude', 'longitude');
+        // Hash/cache stop points. This is used by self::mapCalls() to add NSR
+        // quays (and stop names) directly instead of the internal (regtopp)
+        // stop point IDs.
+        $mapper->preInsertRecord(function ($record) {
+            $this->stopMap[$record['Id']] = [
+                'id' => $record['ExternalId'],
+                'name' => $record['Name'],
+            ];
+        });
         return $mapper;
     }
 
