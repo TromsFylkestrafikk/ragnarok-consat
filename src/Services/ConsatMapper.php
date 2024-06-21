@@ -144,6 +144,9 @@ class ConsatMapper
         $mapper->column('Name', 'name')->required();
         $mapper->column('Latitude', 'latitude');
         $mapper->column('Longitude', 'longitude');
+        // Hash/cache stop points. This is used by self::mapCalls() to add NSR
+        // quays (and stop names) directly instead of the internal (regtopp)
+        // stop point IDs.
         $mapper->preInsertRecord(function ($record) {
             $this->stopMap[$record['Id']] = [
                 'id' => $record['ExternalId'],

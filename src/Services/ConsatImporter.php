@@ -82,6 +82,10 @@ class ConsatImporter
 
     /**
      * Sort csvs by priority.
+     *
+     * Manually override the order the CSVs are handed over to ConsatMapper.
+     * This is useful to force some tables to be loaded before other in case
+     * they depend on each other.
      */
     protected function prioritizeCsvs(array $csvs)
     {
