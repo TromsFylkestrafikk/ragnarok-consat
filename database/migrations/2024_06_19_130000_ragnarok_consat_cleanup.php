@@ -16,8 +16,14 @@ return new class extends Migration
         });
 
         Schema::table('consat_passenger_count', function (Blueprint $table) {
-            $table->dropPrimary(['date', 'id']);
+            // $table->dropPrimary(['date', 'id']);
             $table->dropColumn('id');
+        });
+
+        Schema::table('consat_planned_journeys', function (Blueprint $table) {
+            $table->dateTime('journey_start')->nullable()->comment('Planned start time of journey. Time is in local timezone');
+            $table->dateTime('journey_end')->nullable()->comment('Planned end time of journey. Time is in local timezone');
+            $table->char('direction')->nullable()->comment('Direction code of journey. Inbound or Outbound.');
         });
 
         Schema::drop('consat_destinations');

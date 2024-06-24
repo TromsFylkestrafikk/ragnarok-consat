@@ -80,6 +80,9 @@ class ConsatMapper
         $mapper->column('BelongsToCompanyId', 'company');
         $mapper->column('BelongsToLineId', 'line_id');
         $mapper->column('BelongsToLineId', 'line')->format(fn ($lineId) => $lineId ? (int) substr($lineId, -3) : $lineId);
+        $mapper->column('JourneyStartTime', 'journey_start')->format(fn ($input) => new Carbon($input));
+        $mapper->column('JourneyEndTime', 'journey_end')->format(fn ($input) => new Carbon($input));
+        $mapper->column('DirectionCode', 'direction');
         return $mapper;
     }
 
