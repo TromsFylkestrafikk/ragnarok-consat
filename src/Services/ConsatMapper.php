@@ -90,6 +90,7 @@ class ConsatMapper
         $mapper->column('Id', 'id')->required();
         $mapper->column('UsesPlannedJourneyId', 'planned_journey_id')->required();
         $mapper->column('SequenceInJourney', 'sequence');
+        $mapper->column('UsesStopPointId', 'stop_point_id');
         $mapper->column('StopDurationSeconds', 'stop_duration');
         $mapper->column('PlannedArrivalTime', 'planned_arrival');
         $mapper->column('PlannedDepartureTime', 'planned_departure');
@@ -132,17 +133,23 @@ class ConsatMapper
         return $mapper;
     }
 
-    public function mapDestination($csvFile)
+    public function mapStopPoint($csvFile)
     {
-        $mapper = $this->createMapper($csvFile, 'consat_destinations', ['date', 'id']);
+        $mapper = $this->createMapper($csvFile, 'consat_stops', ['date', 'id']);
         $mapper->column('Id', 'id')->required();
-        $mapper->column('ExternalId', 'external_id');
         $mapper->column('OperatingCalendarDay', 'date')->required()->format([static::class, 'dateFormatter']);
-        $mapper->column('DestinationNameShort', 'destination')->required();
-        $mapper->preInsertRecord(function ($csvRec, &$dbRec) {
-            if (!empty($csvRec['DestinationNameLong'])) {
-                $dbRec['destination'] = $csvRec['DestinationNameLong'];
-            }
+        $mapper->column('ExternalId', 'external_id')->required();
+        $mapper->column('Name', 'name')->required();
+        $mapper->column('Latitude', 'latitude');
+        $mapper->column('Longitude', 'longitude');
+        // Hash/cache stop points. This is used by self::mapCalls() to add NSR
+        // quays (and stop names) directly instead of the internal (regtopp)
+        // stop point IDs.
+        $mapper->preInsertRecord(function ($record) {
+            $this->stopMap[$record['Id']] = [
+                'id' => $record['ExternalId'],
+                'name' => $record['Name'],
+            ];
         });
         return $mapper;
     }
