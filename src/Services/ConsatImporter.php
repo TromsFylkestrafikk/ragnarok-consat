@@ -55,7 +55,6 @@ class ConsatImporter
             'consat_planned_journeys',
             'consat_calls',
             'consat_call_details',
-            'consat_passenger_count',
             'consat_stops',
         ];
 
@@ -87,7 +86,10 @@ class ConsatImporter
      */
     protected function prioritizeCsvs(array $csvs)
     {
-        $order = ['StopPoint.csv' => 1];
+        $order = [
+            'StopPoint.csv' => 1,
+            'PassengerCount.csv' => 2,
+        ];
         usort($csvs, function ($alice, $bob) use ($order) {
             $aWeight = $order[basename($alice)] ?? 1000;
             $bWeight = $order[basename($bob)] ?? 1000;
