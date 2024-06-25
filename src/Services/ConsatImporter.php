@@ -18,7 +18,6 @@ class ConsatImporter
         'Calls.csv' => \Ragnarok\Consat\Models\Call::class,
         'PassengerCount.csv' => \Ragnarok\Consat\Models\PassengerCount::class,
         'PlannedJourneys.csv' => \Ragnarok\Consat\Models\PlannedJourney::class,
-        'StopPoint.csv' => \Ragnarok\Consat\Models\Stop::class,
     ];
 
     /**
@@ -55,7 +54,6 @@ class ConsatImporter
             'consat_planned_journeys',
             'consat_calls',
             'consat_call_details',
-            'consat_stops',
         ];
 
         foreach ($tables as $table) {

@@ -98,7 +98,6 @@ class ConsatMapper
         $mapper->column('Id', 'id')->required();
         $mapper->column('UsesPlannedJourneyId', 'planned_journey_id')->required();
         $mapper->column('SequenceInJourney', 'sequence');
-        $mapper->column('UsesStopPointId', 'stop_point_id');
         $mapper->column('StopDurationSeconds', 'stop_duration');
         $mapper->column('PlannedArrivalTime', 'planned_arrival');
         $mapper->column('PlannedDepartureTime', 'planned_departure');
@@ -109,11 +108,12 @@ class ConsatMapper
         $mapper->column('DelayOnDepartureSeconds', 'delay');
         $mapper->column('IsValid', 'call_valid')->format(fn ($valid) => (bool) $valid);
         return $mapper->preInsertRecord(function ($csvRec, &$dbRec) {
-            $dbRec['nsr_quay_id'] = $this->stopMap[$csvRec['UsesStopPointId']]['id'];
-            $dbRec['stop_name'] = $this->stopMap[$csvRec['UsesStopPointId']]['name'];
-            $pax_id =  $dbRec['date'] . '-' . $dbRec['id'];
+            $stop_key =  $dbRec['date'] . '-' . $csvRec['UsesStopPointId'];
+            $dbRec['stop_name'] = $this->stopMap[$stop_key]['stop_name'];
+            $dbRec['stop_quay_id'] = $this->stopMap[$stop_key]['stop_quay_id'];
+            $pax_key =  $dbRec['date'] . '-' . $dbRec['id'];
             foreach (['pax_on_board', 'pax_in', 'pax_out', 'pax_from_last_journey', 'pax_valid'] as $col) {
-                $dbRec[$col] = $this->pax[$pax_id][$col] ?? null;
+                $dbRec[$col] = $this->pax[$pax_key][$col] ?? null;
             }
         });
     }
@@ -130,9 +130,14 @@ class ConsatMapper
         return $mapper;
     }
 
+    /**
+     * Create map of pax count keyed by call.
+     *
+     * This is not written to DB.
+     */
     public function mapPassengerCount($csvFile): CsvToTable
     {
-        $mapper = $this->createMapper($csvFile, 'consat_passenger_count', ['id']);
+        $mapper = $this->createMapper($csvFile, 'consat_dummy', ['id']);
         $mapper->column('OperatingCalendarDay', 'date')->required()->format([static::class, 'dateFormatter']);
         $mapper->column('HappensAtCallId', 'call_id')->required();
         $mapper->column('PassengersOnboard', 'pax_on_board');
@@ -146,23 +151,24 @@ class ConsatMapper
         });
     }
 
+    /**
+     * Create map of stop points for use in calls table.
+     *
+     * This is not written to DB.
+     */
     public function mapStopPoint($csvFile): CsvToTable
     {
-        $mapper = $this->createMapper($csvFile, 'consat_stops', ['date', 'id']);
+        $mapper = $this->createMapper($csvFile, 'consat_dummy', ['date', 'id']);
         $mapper->column('Id', 'id')->required();
         $mapper->column('OperatingCalendarDay', 'date')->required()->format([static::class, 'dateFormatter']);
-        $mapper->column('ExternalId', 'external_id')->required();
-        $mapper->column('Name', 'name')->required();
-        $mapper->column('Latitude', 'latitude');
-        $mapper->column('Longitude', 'longitude');
+        $mapper->column('ExternalId', 'stop_quay_id')->required();
+        $mapper->column('Name', 'stop_name')->required();
         // Hash/cache stop points. This is used by self::mapCalls() to add NSR
         // quays (and stop names) directly instead of the internal (regtopp)
         // stop point IDs.
-        return $mapper->preInsertRecord(function ($record) {
-            $this->stopMap[$record['Id']] = [
-                'id' => $record['ExternalId'],
-                'name' => $record['Name'],
-            ];
+        return $mapper->dummy()->preInsertRecord(function ($record, $dbRec) {
+            $key = $dbRec['date'] . '-' . $dbRec['id'];
+            $this->stopMap[$key] = $dbRec;
         });
     }
 
