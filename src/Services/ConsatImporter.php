@@ -16,10 +16,7 @@ class ConsatImporter
     protected $csvModelMap = [
         'CallDetails.csv' => \Ragnarok\Consat\Models\CallDetail::class,
         'Calls.csv' => \Ragnarok\Consat\Models\Call::class,
-        'PassengerCount.csv' => \Ragnarok\Consat\Models\PassengerCount::class,
         'PlannedJourneys.csv' => \Ragnarok\Consat\Models\PlannedJourney::class,
-        'StopPoint.csv' => \Ragnarok\Consat\Models\Stop::class,
-        'Destination.csv' => \Ragnarok\Consat\Models\Destination::class,
     ];
 
     /**
@@ -56,9 +53,6 @@ class ConsatImporter
             'consat_planned_journeys',
             'consat_calls',
             'consat_call_details',
-            'consat_passenger_count',
-            'consat_stops',
-            'consat_destinations'
         ];
 
         foreach ($tables as $table) {
@@ -89,7 +83,10 @@ class ConsatImporter
      */
     protected function prioritizeCsvs(array $csvs)
     {
-        $order = ['StopPoint.csv' => 1];
+        $order = [
+            'StopPoint.csv' => 1,
+            'PassengerCount.csv' => 2,
+        ];
         usort($csvs, function ($alice, $bob) use ($order) {
             $aWeight = $order[basename($alice)] ?? 1000;
             $bWeight = $order[basename($bob)] ?? 1000;
