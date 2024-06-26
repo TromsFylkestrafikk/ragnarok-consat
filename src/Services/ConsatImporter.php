@@ -16,7 +16,6 @@ class ConsatImporter
     protected $csvModelMap = [
         'CallDetails.csv' => \Ragnarok\Consat\Models\CallDetail::class,
         'Calls.csv' => \Ragnarok\Consat\Models\Call::class,
-        'PassengerCount.csv' => \Ragnarok\Consat\Models\PassengerCount::class,
         'PlannedJourneys.csv' => \Ragnarok\Consat\Models\PlannedJourney::class,
     ];
 
