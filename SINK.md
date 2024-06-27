@@ -4,19 +4,22 @@ Historic real time travel data from Consat.
 
 ## Data
 
-This sink has historic real time information for each operating day,
-generated in the early hours the next day. The imported data consist
-of:
+The data provided by Consat is two-fold: Planned journeys and actual,
+executed journeys.  The planned journeys stored in
+`consat_planned_journeys` has some basic data for each trip, like
+date, line and trip number, start and end time of journey, company and
+direction (in- or outbound).
 
-- All planned journeys: `consat_planned_journeys`. This has
-  information about line, company, start and stop time and direction
-  of the journey.
-- All executed calls with pax data and stop name: `consat_calls`. This
-  is probably the most useful table to get familiar with as it
-  contains all delays, passenger count data and stop names.
-- All positions reported by all vehicles on all journeys:
-  `consat_call_details`. Due to its massive size this data is stored
-  for a month only.
+The executed, ran journeys is more detailed with all calls done. This
+data is stored in the table `consat_calls`. For every call there is
+metrics for stop place, pax count, reference to its planned journey,
+planned and actual arrival and departure times, distance to next stop,
+delay, vehicle and validity of the call.
+
+A final table `consat_call_details` consist of every position reported
+by all vehicles on all trips, giving us a trace of all recorded
+journeys.  Due to its massive size this only has data one month back.
+
 
 ## Source
 
@@ -26,16 +29,12 @@ planned journeys of a PTA.
 
 ## Usage
 
-The most useful import data from Consat is within the `consat_calls`
-table.  It contains timestamps for both planned and actual departure
-and arrivals, passenger count and quay ID. It references the planned
-journey and has to be joined with both this and the date column.
+The `consat_calls` table is the most interesting table as this has pax
+and delay data connected with stop places, which is essential when
+investigating bottle necks and customer flow.
 
-All joins within this source have to be joined with both the foreign
-key and the `date` column, which all tables has. e.g:
-```sql
-select j.line, c.stop_name
-from consat_calls c join consat_planned_journeys j on c.date = j.date and c.planned_journey_id = j.id
-where c.date = '2024-06-24'
-```
+This gives answers to interesting questions like:
+- What stop places are causes for delays
+- How many pax is transported per line per day
+- What lines are more prone to delays than other
 
