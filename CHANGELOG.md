@@ -5,6 +5,7 @@
 ### Added
 - Planned journey table has journey start and end time of journeys, in
   addition to journey direction (Inbound, Outbound)
+- Documentation of sink (`SINK.md`).
 
 ### Changed
 - Stop quay info and pax data are now merged into the `consat_calls`
