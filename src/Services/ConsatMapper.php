@@ -151,22 +151,19 @@ class ConsatMapper
         });
     }
 
-    /**
-     * Create map of stop points for use in calls table.
-     *
-     * This is not written to DB.
-     */
     public function mapStopPoint($csvFile): CsvToTable
     {
-        $mapper = $this->createMapper($csvFile, 'consat_dummy', ['date', 'id']);
+        $mapper = $this->createMapper($csvFile, 'consat_stops', ['date', 'id']);
         $mapper->column('Id', 'id')->required();
         $mapper->column('OperatingCalendarDay', 'date')->required()->format([static::class, 'dateFormatter']);
         $mapper->column('ExternalId', 'stop_quay_id')->required();
         $mapper->column('Name', 'stop_name')->required();
+        $mapper->column('Latitude', 'latitude');
+        $mapper->column('Longitude', 'longitude');
         // Hash/cache stop points. This is used by self::mapCalls() to add NSR
         // quays (and stop names) directly instead of the internal (regtopp)
         // stop point IDs.
-        return $mapper->dummy()->preInsertRecord(function ($record, $dbRec) {
+        return $mapper->preInsertRecord(function ($record, $dbRec) {
             $key = $dbRec['date'] . '-' . $dbRec['id'];
             $this->stopMap[$key] = $dbRec;
         });
