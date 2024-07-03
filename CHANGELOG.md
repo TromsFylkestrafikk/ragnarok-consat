@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Added
+- New DB table: consat_ivalidated_journeys.
 - Planned journey table has journey start and end time of journeys, in
   addition to journey direction (Inbound, Outbound)
 - Documentation of sink (`SINK.md`).

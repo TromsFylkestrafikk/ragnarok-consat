@@ -91,6 +91,18 @@ class ConsatMapper
         return $mapper;
     }
 
+    public function mapInvalidatedJourneys($csvFile): CsvToTable
+    {
+        $mapper = $this->createMapper($csvFile, 'consat_invalidated_journeys', ['date', 'planned_journey_id']);
+        $mapper->column('OperatingCalendarDay', 'date')->required()->format([static::class, 'dateFormatter']);
+        $mapper->column('UsesPlannedJourneyId', 'planned_journey_id')->required();
+        $mapper->column('ValidityStart', 'validity_start')->format(fn ($input) => new Carbon($input));
+        $mapper->column('ValidityEnd', 'validity_end')->format(fn ($input) => new Carbon($input));
+        $mapper->column('Creator', 'creator');
+        $mapper->column('Description', 'description');
+        return $mapper;
+    }
+
     public function mapCalls($csvFile): CsvToTable
     {
         $mapper = $this->createMapper($csvFile, 'consat_calls', ['date', 'id']);
