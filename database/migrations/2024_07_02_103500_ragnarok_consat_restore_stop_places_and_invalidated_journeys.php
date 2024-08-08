@@ -11,6 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('consat_stops', function (Blueprint $table) {
+            $table->date('date')->comment('Date for when stop ID is valid');
+            $table->unsignedBigInteger('id')->comment('Consat internal ID for this stop');
+            $table->string('stop_quay_id')->comment('NSR quay ID (or Regtopp for old sets)');
+            $table->string('stop_name')->comment('Stop place name');
+            $table->double('latitude')->comment('Latitude of stop place');
+            $table->double('longitude')->comment('Longitude of stop place');
+
+            $table->primary(['date', 'id']);
+        });
+
         Schema::create('consat_invalidated_journeys', function (Blueprint $table) {
             $table->date('date')->comment('Date of the affected journey');
             $table->unsignedBigInteger('planned_journey_id')->comment('Reference to table consat_planned_journey');
@@ -28,6 +39,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('consat_stops');
         Schema::dropIfExists('consat_invalidated_journeys');
     }
 };
