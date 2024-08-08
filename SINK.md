@@ -10,15 +10,23 @@ executed journeys.  The planned journeys stored in
 date, line and trip number, start and end time of journey, company and
 direction (in- or outbound).
 
+Information about cancelled journeys can be found in the table called
+`consat_invalidated_journeys`. This includes date, validity period,
+creator and description for each entry.
+
 The executed, ran journeys is more detailed with all calls done. This
 data is stored in the table `consat_calls`. For every call there is
 metrics for stop place, pax count, reference to its planned journey,
 planned and actual arrival and departure times, distance to next stop,
 delay, vehicle and validity of the call.
 
-A final table `consat_call_details` consist of every position reported
-by all vehicles on all trips, giving us a trace of all recorded
-journeys.  Due to its massive size this only has data one month back.
+The `consat_call_details` table consists of every position reported by
+all vehicles on all trips, giving us a trace of all recorded journeys.
+Due to its huge size, this table only holds data for one month back.
+
+Stop place details like name, date, global position and NSR quay ID
+are stored in table `consat_stops`. This makes it possible to track
+stop place changes over time.
 
 
 ## Source
