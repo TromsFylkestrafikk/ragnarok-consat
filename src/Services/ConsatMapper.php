@@ -121,7 +121,7 @@ class ConsatMapper
         $mapper->column('IsValid', 'valid')->format(fn ($valid) => (bool) $valid);
         return $mapper->preInsertRecord(function ($csvRec, &$dbRec) {
             $stop_key =  $dbRec['date'] . '-' . $csvRec['UsesStopPointId'];
-            $dbRec['stop_quay_id'] = $this->stopMap[$stop_key]['stop_quay_id'];
+            $dbRec['stop_quay_id'] = $this->stopMap[$stop_key]['id'];
         });
     }
 
@@ -134,10 +134,6 @@ class ConsatMapper
         $mapper->column('ReportedDistance', 'distance');
         $mapper->column('ReportedLatitude', 'latitude');
         $mapper->column('ReportedLongitude', 'longitude');
-        return $mapper->preInsertRecord(function ($csvRec, &$dbRec) {
-            $stop_key =  $dbRec['date'] . '-' . $csvRec['UsesStopPointId'];
-            $dbRec['id'] = $this->stopMap[$stop_key]['stop_quay_id'];
-        });
         return $mapper;
     }
 
@@ -168,7 +164,7 @@ class ConsatMapper
         // quays (and stop names) directly instead of the internal (regtopp)
         // stop point IDs.
         return $mapper->preInsertRecord(function ($record, $dbRec) {
-            $key = $dbRec['date'] . '-' . $dbRec['id'];
+            $key = $dbRec['date'] . '-' . $record['Id'];
             $this->stopMap[$key] = $dbRec;
         });
     }
