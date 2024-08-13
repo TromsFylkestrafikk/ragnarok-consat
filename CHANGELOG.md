@@ -9,11 +9,9 @@
 - Documentation of sink (`SINK.md`).
 
 ### Changed
-- Stop quay info and pax data are now merged into the `consat_calls`
-  table.
-- Dropped tables `consat_destinations` and `consat_passenger_count` as
-  these are merged or superfluous.
+- Dropped table `consat_destinations`.
 - All timestamp columns converted to datetime.
+- Stop quay IDs are now converted to the NSR or Regtopp equivalent.
 
 ## [0.1.0] – 2024-04-18
 ### Added
