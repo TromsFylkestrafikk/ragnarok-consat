@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('consat_stops', function (Blueprint $table) {
             $table->char('id')->comment('NSR/Regtopp quay ID');
-            $table->date('date')->comment('Date for when stop ID is valid');
+            $table->date('date')->comment('Date of data set this stop belongs to.');
             $table->string('stop_name')->comment('Stop place name');
             $table->double('latitude')->comment('Latitude of stop place');
             $table->double('longitude')->comment('Longitude of stop place');
