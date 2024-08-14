@@ -17,6 +17,7 @@ class ConsatImporter
         'CallDetails.csv' => \Ragnarok\Consat\Models\CallDetail::class,
         'Calls.csv' => \Ragnarok\Consat\Models\Call::class,
         'InvalidatedJourneys.csv' => \Ragnarok\Consat\Models\InvalidatedJourney::class,
+        'PassengerCount.csv' => \Ragnarok\Consat\Models\PassengerCount::class,
         'PlannedJourneys.csv' => \Ragnarok\Consat\Models\PlannedJourney::class,
         'StopPoint.csv' => \Ragnarok\Consat\Models\Stop::class,
     ];
@@ -56,6 +57,7 @@ class ConsatImporter
             'consat_invalidated_journeys',
             'consat_calls',
             'consat_call_details',
+            'consat_passenger_count',
             'consat_stops',
         ];
 
@@ -89,7 +91,6 @@ class ConsatImporter
     {
         $order = [
             'StopPoint.csv' => 1,
-            'PassengerCount.csv' => 2,
         ];
         usort($csvs, function ($alice, $bob) use ($order) {
             $aWeight = $order[basename($alice)] ?? 1000;

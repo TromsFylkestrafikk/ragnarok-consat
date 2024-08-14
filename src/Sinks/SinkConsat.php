@@ -24,6 +24,7 @@ class SinkConsat extends SinkBase
             'consat_invalidated_journeys' => 'All cancelled journeys for a given day',
             'consat_calls' => 'All calls at all stops for all journeys',
             'consat_call_details' => 'All vehicle events. Grouped by call. Due to its massive size, old data will be deleted',
+            'consat_passenger_count' => 'Automatic Passenger Counted data. Aggregated per call.',
             'consat_stops' => 'All stops involved in route set per day',
         ];
     }
