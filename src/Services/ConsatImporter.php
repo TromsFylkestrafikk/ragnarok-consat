@@ -39,7 +39,7 @@ class ConsatImporter
             if (!$mapper) {
                 continue;
             }
-            $this->importRecordCount += $mapper->exec()->logSummary()->getProcessedRecords();
+            $this->importRecordCount += $mapper->exec()->getProcessedRecords();
         }
         $extractor->cleanUp();
         return $this;
