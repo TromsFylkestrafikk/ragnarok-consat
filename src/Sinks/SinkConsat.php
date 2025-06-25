@@ -58,7 +58,7 @@ class SinkConsat extends SinkBase
      */
     public function import(string $id, SinkFile $file): int
     {
-        $importer = ConsatImporter::deleteImport($id)->import($id, $file);
+        $importer = ConsatImporter::import($id, $file);
         return $importer->getImportRecordCount();
     }
 

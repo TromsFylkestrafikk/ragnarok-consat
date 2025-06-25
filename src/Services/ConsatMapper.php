@@ -137,6 +137,16 @@ class ConsatMapper
         return $mapper;
     }
 
+    public function mapLine($csvFile): CsvToTable
+    {
+        $mapper = $this->createMapper($csvFile, 'consat_lines', ['date', 'id']);
+        $mapper->column('Id', 'id')->required();
+        $mapper->column('OperatingCalendarDay', 'date')->required()->format([static::class, 'dateFormatter']);
+        $mapper->column('ExternalId', 'line_id');
+        $mapper->column('LineNameShort', 'line');
+        return $mapper;
+    }
+
     public function mapPassengerCount($csvFile): CsvToTable
     {
         $mapper = $this->createMapper($csvFile, 'consat_passenger_count', ['id']);
