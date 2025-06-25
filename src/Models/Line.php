@@ -4,8 +4,8 @@ namespace Ragnarok\Consat\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class InvalidatedJourney extends Model
+class Line extends Model
 {
     public $timestamps = false;
-    protected $table = 'consat_invalidated_journeys';
+    protected $table = 'consat_lines';
 }

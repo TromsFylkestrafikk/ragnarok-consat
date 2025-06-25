@@ -13,7 +13,7 @@ use Ragnarok\Consat\Services\ConsatFiles as CFiles;
  * @method static \Illuminate\Contracts\Filesystem\Filesystem getRemoteDisk()
  * @method static void logPrintfInit(void $prefix = '', void ...$prefixArgs)
  *
- * @see Ragnarok\Consat\Services\ConsatFiles
+ * @see \Ragnarok\Consat\Services\ConsatFiles
  */
 class ConsatFiles extends Facade
 {
